@@ -3,4 +3,15 @@
   <groupId>socialbot</groupId>
   <artifactId>socialbot</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  	<properties>
+		<jvm.version>1.6</jvm.version>
+		<targetJdk>1.6</targetJdk>
+		<!-- enforce unicode -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	 <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
 </project>
