@@ -1,17 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>socialbot</groupId>
-  <artifactId>socialbot</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  	<properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>socialbot</groupId>
+	<artifactId>socialbot</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<properties>
 		<jvm.version>1.6</jvm.version>
 		<targetJdk>1.6</targetJdk>
 		<!-- enforce unicode -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-	 <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
+	<configuration>
+		<source>1.6</source>
+		<target>1.6</target>
+	</configuration>
+	
+	<dependencies>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+	</dependencies>
 </project>
