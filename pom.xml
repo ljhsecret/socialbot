@@ -5,22 +5,32 @@
 	<artifactId>socialbot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-		<jvm.version>1.6</jvm.version>
-		<targetJdk>1.6</targetJdk>
+		<jvm.version>1.7</jvm.version>
+		<targetJdk>1.7</targetJdk>
 		<!-- enforce unicode -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-	<configuration>
-		<source>1.6</source>
-		<target>1.6</target>
-	</configuration>
-	
+	<build>
+	<plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+
+	</build>
 	<dependencies>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-		</dependency>
+	<groupId>com.sun.net.httpserver</groupId>
+	<artifactId>http</artifactId>
+	<version>20070405</version>
+</dependency>
+		
 	</dependencies>
 </project>
