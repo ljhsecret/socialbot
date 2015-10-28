@@ -3,9 +3,12 @@ package kr.co.opensns.ksbiz.socialbot.balancer.job;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.security.auth.login.Configuration;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 
+import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
 import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpStatusListener;
 import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpTestClient;
@@ -34,11 +37,12 @@ public class JobManager implements Runnable {
 	SeedManager seedManager;
 	AgentManager agentManager;
 	HttpTestClient client;
+	BalancerConfig conf;
 	
 	public JobManager() {
 		jobTable = SharedJobTable.getInstance();
-		agentManager = new AgentManager();
-		seedManager = new SeedManager();
+		agentManager = new AgentManager(conf);
+		seedManager = new SeedManager(conf);
 		client = new HttpTestClient();
 		client.setHttpStatusListener(new HttpStatusListener() {
 			
@@ -54,6 +58,10 @@ public class JobManager implements Runnable {
 				System.out.println("Get response about "+paramMap.get("jobId")+"from agent");
 			}
 		});
+	}
+
+	public JobManager(BalancerConfig conf) {
+		this.conf = conf; 
 	}
 
 	public void run() {

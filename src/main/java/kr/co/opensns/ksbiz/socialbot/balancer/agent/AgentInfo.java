@@ -92,4 +92,8 @@ public class AgentInfo implements Comparable<AgentInfo> {
 	public void setLastWorkingTime(long lastWorkingTime) {
 		this.lastWorkingTime = lastWorkingTime;
 	}
+	
+	public String toCSV(){
+		return ip+","+port+","+lastWorkingTime+","+jobCount+","+avrJobProcessingTime;
+	}
 }
