@@ -1,5 +1,7 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
+import java.util.HashMap;
+
 /**
  * 클래스 설명
  *
@@ -15,5 +17,18 @@ package kr.co.opensns.ksbiz.socialbot.balancer.seed;
  */
 
 public class SeedManager {
+	
+	HashMap<String,SeedQueue> queueMap;
+	
+	public SeedManager(){
+		
+	}
+	
+	public SeedEntity getSeedEntity(String site){
+		return queueMap.get(site).poll();
+	}
 
+	public void update(SeedEntity seed) {
+		
+	}
 }

@@ -1,5 +1,7 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
+import java.util.Date;
+
 /**
  * 클래스 설명
  *
@@ -15,5 +17,61 @@ package kr.co.opensns.ksbiz.socialbot.balancer.seed;
  */
 
 public class SeedEntity {
-
+	String channel;
+	String site;
+	String seed;
+	String type;
+	long crawlCount;
+	long crawledDocCount;
+	Date lastCrawlDate;
+	String cursor;
+	
+	public String getChannel() {
+		return channel;
+	}
+	public String getSite() {
+		return site;
+	}
+	public String getSeed() {
+		return seed;
+	}
+	public String getType() {
+		return type;
+	}
+	public long getCrawlCount() {
+		return crawlCount;
+	}
+	public long getCrawledDocCount() {
+		return crawledDocCount;
+	}
+	public Date getLastCrawlDate() {
+		return lastCrawlDate;
+	}
+	public String getCursor() {
+		return cursor;
+	}
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+	public void setSite(String site) {
+		this.site = site;
+	}
+	public void setSeed(String seed) {
+		this.seed = seed;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public void setCrawlCount(long crawlCount) {
+		this.crawlCount = crawlCount;
+	}
+	public void setCrawledDocCount(long crawledDocCount) {
+		this.crawledDocCount = crawledDocCount;
+	}
+	public void setLastCrawlDate(Date lastCrawlDate) {
+		this.lastCrawlDate = lastCrawlDate;
+	}
+	public void setCursor(String cursor) {
+		this.cursor = cursor;
+	}
 }

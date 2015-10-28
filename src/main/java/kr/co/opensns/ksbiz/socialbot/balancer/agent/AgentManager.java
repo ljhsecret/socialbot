@@ -1,5 +1,13 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.agent;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.sql.rowset.spi.SyncResolver;
+
 /**
  * 클래스 설명
  *
@@ -15,5 +23,30 @@ package kr.co.opensns.ksbiz.socialbot.balancer.agent;
  */
 
 public class AgentManager {
+	
+	List<AgentInfo> AgentList;
+	
+	public AgentManager(){
+		AgentList = new ArrayList<AgentInfo>();
+	}
+	
+	public AgentInfo getAgentInfo(){
+		synchronized (AgentManager.class) {
+			Collections.sort(AgentList);
+		}	
+	
+		return AgentList.get(0);
+	}
+	
+	public void load(){
+		
+	}
 
+	public void update(String ID, Map<String, String> field) {
+		synchronized (AgentManager.class) {
+			AgentList.get(0);
+			field.get("status");
+			field.get("Processing Time");
+		}
+	}
 }
