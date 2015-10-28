@@ -22,7 +22,7 @@ import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 public class SeedManager {
 	
 	HashMap<String,SeedQueue> queueMap;
-	
+	SeedLoader loader;
 	public SeedManager(){
 		
 	}
@@ -30,13 +30,15 @@ public class SeedManager {
 	public SeedManager(BalancerConfig conf) {
 		List<HashMap<String,String>> seedconf = conf.getSeedConfig();
 		for (HashMap<String, String> map : seedconf){
-			map.get("repository");
-			SeedQueue q = new SeedQueue();
+			if("local".equals(map.get("repository"))){
+				loader = new SeedLoader<FileSeedLoader>();
+			}
+			SeedQueue q = loader.LoadSeedQueue(map.get("path"),map.get("site")+"-"+map.get("type"));
 		}
 	}
 
 	public SeedEntity getSeedEntity(String site){
-		return queueMap.get(site).poll();
+		return queueMap.get(site).take();
 	}
 
 	public void update(SeedEntity seed) {
