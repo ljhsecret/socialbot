@@ -48,13 +48,11 @@ public class JobEntity {
 	}
 	
 	public JobEntity(SeedEntity seed, AgentInfo agent){
-		this.channelId = seed.getChannel();
-		this.siteId = seed.getSite();
-		this.seed = seed.getSeed();
-		this.cursor = seed.getCursor();
-		this.crawlType = seed.getType();
-		
-		
+//		this.channelId = seed.getChannel();
+//		this.siteId = seed.getSite();
+//		this.seed = seed.getSeed();
+//		this.cursor = seed.getCursor();
+//		this.crawlType = seed.getType();
 	}
 	
 	public void setSeed(SeedEntity seed){
@@ -81,10 +79,10 @@ public class JobEntity {
 	public HashMap<String, String> makeReqestParamMap(){
 		HashMap<String, String> paramMap = new HashMap<String, String>();
 		
-		paramMap.put("jobId", ID);
-		paramMap.put("channelId", "");
-		paramMap.put("siteId", "");
-		paramMap.put("seed", "");
+		paramMap.put("jobId", "ID");
+		paramMap.put("channelId", channelId);
+		paramMap.put("siteId", siteId);
+		paramMap.put("seed", seed);
 		paramMap.put("cursor", "");
 		paramMap.put("crawlType", "");
 		paramMap.put("contentType", "JSON");

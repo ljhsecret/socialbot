@@ -106,7 +106,7 @@ public class JobManager implements Runnable {
 		JobEntity job = new JobEntity();
 
 		job.setAgent(agentManager.getAgentInfo());
-		job.setSeed(seedManager.getSeedEntity("site"));
+		job.setSeed(seedManager.getSeedEntity("instagram"));
 
 		return job;
 	}

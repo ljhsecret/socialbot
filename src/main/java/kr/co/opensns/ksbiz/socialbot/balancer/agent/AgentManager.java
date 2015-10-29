@@ -48,6 +48,7 @@ public class AgentManager {
 	}
 
 	public AgentManager(BalancerConfig conf) {
+		this();
 	}
 
 	public AgentInfo getAgentInfo() {
@@ -63,15 +64,15 @@ public class AgentManager {
 			while ((line = br.readLine()) != null) {
 				String[] csv = line.split(",");
 
-				if (csv.length < 6)
+				if (csv.length < 5)
 					continue;
 
 				AgentInfo agent = new AgentInfo();
 				agent.setIp(csv[0]);
 				agent.setPort(csv[1]);
-				agent.setLastWorkingTime(Long.parseLong(csv[2]));
-				agent.setJobCount(Integer.parseInt(csv[3]));
-				agent.setAvrJobProcessingTime(Long.parseLong(csv[4]));
+				agent.setLastWorkingTime(csv[2].equals("null")?0:Long.parseLong(csv[2]));
+				agent.setJobCount(csv[2].equals("null")?0:Integer.parseInt(csv[3]));
+				agent.setAvrJobProcessingTime(csv[2].equals("null")?0:Long.parseLong(csv[4]));
 				
 				agentQueue.put(agent);
 				logger.info("agent Load done : "+agent.getIp());

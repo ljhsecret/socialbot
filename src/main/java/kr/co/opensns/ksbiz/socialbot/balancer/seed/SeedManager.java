@@ -30,6 +30,7 @@ public class SeedManager {
 	
 	public SeedManager(){
 		logger=Logger.getLogger(this.getClass());
+		queueMap = new HashMap<String,SeedQueue>();
 	}
 	
 	public SeedManager(BalancerConfig conf) {
@@ -46,6 +47,7 @@ public class SeedManager {
 				String site = map.get("site");
 				String type = map.get("type");
 				q = loader.LoadSeedQueue(path,site+"-"+type);
+				queueMap.put(site,q);
 				logger.info("SeedQueue Load done : "+site+"-"+type);
 			} catch (InstantiationException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException

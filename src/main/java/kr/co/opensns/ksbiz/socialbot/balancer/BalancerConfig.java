@@ -87,11 +87,11 @@ public class BalancerConfig {
 			}
 
 		} catch (JDOMException jdome) {
-			System.out.println("ERROR Fail to init cultinfoConfig");
+			System.out.println("ERROR Fail to init Config");
 		} catch (FileNotFoundException fnfe) {
-			System.out.println("ERROR Fail to init cultinfoConfig : FileNotFoundException - filePath:"+configFilePath);
+			System.out.println("ERROR Fail to init Config : FileNotFoundException - filePath:"+configFilePath);
 		} catch (IOException e) {
-			System.out.println("ERROR Fail to init cultinfoConfig");
+			System.out.println("ERROR Fail to init Config");
 		}
 	}
 	

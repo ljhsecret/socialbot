@@ -48,9 +48,9 @@ public class FileSeedLoader extends Loadable{
 				seed.setSite(csv[1]);
 				seed.setSeed(csv[2]);
 				seed.setCursor(csv[3]);
-				seed.setCrawlCount(csv[4].equals("")?0:Integer.parseInt(csv[4]));
-				seed.setCrawledDocCount(csv[5].equals("")?0:Long.parseLong(csv[5]));
-				seed.setLastCrawlDate(csv[6].equals("")?0:Long.parseLong(csv[6]));
+				seed.setCrawlCount(csv[4].equals("null")?0:Integer.parseInt(csv[4]));
+				seed.setCrawledDocCount(csv[5].equals("null")?0:Long.parseLong(csv[5]));
+				seed.setLastCrawlDate(csv[6].equals("null")?0:Long.parseLong(csv[6]));
 				
 				q.put(seed);
 				logger.info("Seed : "+seed.seed);
