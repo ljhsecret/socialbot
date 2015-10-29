@@ -23,7 +23,7 @@ public class SeedEntity {
 	String type;
 	long crawlCount;
 	long crawledDocCount;
-	Date lastCrawlDate;
+	long lastCrawlDate;
 	String cursor;
 	
 	public String getChannel() {
@@ -44,7 +44,7 @@ public class SeedEntity {
 	public long getCrawledDocCount() {
 		return crawledDocCount;
 	}
-	public Date getLastCrawlDate() {
+	public long getLastCrawlDate() {
 		return lastCrawlDate;
 	}
 	public String getCursor() {
@@ -68,10 +68,16 @@ public class SeedEntity {
 	public void setCrawledDocCount(long crawledDocCount) {
 		this.crawledDocCount = crawledDocCount;
 	}
-	public void setLastCrawlDate(Date lastCrawlDate) {
+	public void setLastCrawlDate(long lastCrawlDate) {
 		this.lastCrawlDate = lastCrawlDate;
 	}
 	public void setCursor(String cursor) {
 		this.cursor = cursor;
+	}
+	
+	public double getPriority(){
+		
+		
+		return 0;
 	}
 }

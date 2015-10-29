@@ -18,7 +18,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 public class SeedQueue{
 	
-	PriorityBlockingQueue<SeedEntity> queue = new PriorityBlockingQueue<>(20, new SeedComprator());
+	PriorityBlockingQueue<SeedEntity> queue = new PriorityBlockingQueue<>(10000000, new SeedComprator());
 	String type;
 	
 	public SeedQueue(String type){

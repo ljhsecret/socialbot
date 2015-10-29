@@ -49,7 +49,7 @@ public class AgentInfo implements Comparable<AgentInfo> {
 		return "http://" + ip + ":" + port + "/" + context + "/";
 	}
 
-	private double getPriority() {
+	public double getPriority() {
 		return jobCount * 100000000 + avrJobProcessingTime;
 	}
 

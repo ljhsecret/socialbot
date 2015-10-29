@@ -1,7 +1,10 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 
@@ -23,17 +26,33 @@ public class SeedManager {
 	
 	HashMap<String,SeedQueue> queueMap;
 	SeedLoader loader;
+	Logger logger;
+	
 	public SeedManager(){
-		
+		logger=Logger.getLogger(this.getClass());
 	}
 	
 	public SeedManager(BalancerConfig conf) {
+		this();
 		List<HashMap<String,String>> seedconf = conf.getSeedConfig();
 		for (HashMap<String, String> map : seedconf){
 			if("local".equals(map.get("repository"))){
-				loader = new SeedLoader<FileSeedLoader>();
+				loader = new SeedLoader<FileSeedLoader>(FileSeedLoader.class);
+			} else
+				continue;
+			SeedQueue q;
+			try {
+				String path = map.get("path");
+				String site = map.get("site");
+				String type = map.get("type");
+				q = loader.LoadSeedQueue(path,site+"-"+type);
+				logger.info("SeedQueue Load done : "+site+"-"+type);
+			} catch (InstantiationException | IllegalAccessException
+					| IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException e) {
+//				e.printStackTrace();
+				logger.info("SeedQueue Load fail");
 			}
-			SeedQueue q = loader.LoadSeedQueue(map.get("path"),map.get("site")+"-"+map.get("type"));
 		}
 	}
 

@@ -17,6 +17,8 @@ import java.util.Map;
 
 import javax.sql.rowset.spi.SyncResolver;
 
+import org.apache.log4j.Logger;
+
 import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 
 /**
@@ -36,22 +38,20 @@ import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 
 public class AgentManager {
 
-	List<AgentInfo> AgentList;
+	AgentQueue agentQueue;
 	String localFilePath = "config/agents.csv";
+	Logger logger;
 
 	public AgentManager() {
-		AgentList = new ArrayList<AgentInfo>();
+		agentQueue = new AgentQueue();
+		logger = Logger.getLogger(this.getClass());
 	}
 
 	public AgentManager(BalancerConfig conf) {
 	}
 
 	public AgentInfo getAgentInfo() {
-		synchronized (AgentManager.class) {
-			Collections.sort(AgentList);
-		}
-
-		return AgentList.get(0);
+		return agentQueue.take();
 	}
 
 	public void load() throws FileNotFoundException {
@@ -59,6 +59,7 @@ public class AgentManager {
 				new FileInputStream(new File(localFilePath))));
 		String line;
 		try {
+			logger.info("AgentInfo start loading");
 			while ((line = br.readLine()) != null) {
 				String[] csv = line.split(",");
 
@@ -71,8 +72,11 @@ public class AgentManager {
 				agent.setLastWorkingTime(Long.parseLong(csv[2]));
 				agent.setJobCount(Integer.parseInt(csv[3]));
 				agent.setAvrJobProcessingTime(Long.parseLong(csv[4]));
+				
+				agentQueue.put(agent);
+				logger.info("agent Load done : "+agent.getIp());
 			}
-			
+
 			br.close();
 		} catch (NumberFormatException | IOException e) {
 			// TODO Auto-generated catch block
@@ -80,22 +84,22 @@ public class AgentManager {
 		}
 	}
 
-	public void save() throws IOException {
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(new File(localFilePath))));
-
-		for (AgentInfo agent : AgentList) {
-			bw.write(agent.toCSV());
-			bw.newLine();
-		}
-		bw.close();
-	}
-
-	public void update(String ID, Map<String, String> field) {
-		synchronized (AgentManager.class) {
-			AgentList.get(0);
-			field.get("status");
-			field.get("Processing Time");
-		}
-	}
+//	public void save() throws IOException {
+//		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+//				new FileOutputStream(new File(localFilePath))));
+//
+//		for (AgentInfo agent : AgentList) {
+//			bw.write(agent.toCSV());
+//			bw.newLine();
+//		}
+//		bw.close();
+//	}
+//
+//	public void update(String ID, Map<String, String> field) {
+//		synchronized (AgentManager.class) {
+//			AgentList.get(0);
+//			field.get("status");
+//			field.get("Processing Time");
+//		}
+//	}
 }
