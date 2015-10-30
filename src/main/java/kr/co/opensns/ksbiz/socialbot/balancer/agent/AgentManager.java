@@ -38,17 +38,35 @@ import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 
 public class AgentManager {
 
-	AgentQueue agentQueue;
-	String localFilePath = "config/agents.csv";
-	Logger logger;
-
-	public AgentManager() {
+	private static AgentManager instance;
+	private AgentQueue agentQueue;
+	private String localFilePath = "config/agents.csv";
+	private Logger logger;
+	private BalancerConfig conf;
+	
+	
+	private AgentManager() {
 		agentQueue = new AgentQueue();
 		logger = Logger.getLogger(this.getClass());
 	}
+	
+	public static AgentManager getInstance(){
+		if(instance==null){
+			synchronized (AgentManager.class) {
+				instance = new AgentManager();
+			}
+		}
+		return instance;
+	}
 
-	public AgentManager(BalancerConfig conf) {
-		this();
+	public void setConfig(BalancerConfig conf) {
+		this.conf = conf;
+		try {
+			load();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public AgentInfo getAgentInfo() {

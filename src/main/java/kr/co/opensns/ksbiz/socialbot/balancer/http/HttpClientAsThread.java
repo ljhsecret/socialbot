@@ -9,31 +9,41 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import kr.co.opensns.ksbiz.socialbot.balancer.job.JobEntity;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 
-
 /**
- * 데몬을 테스트 하기 위한 클라이언트 테스트 클래스<br>
- * USAGE : java HttpPooledClientStarter ["call_A"|"call_B"]<br>
- * 파라메터 : call_A 또는 call_B 문자열을 직접 입력.<br>
- * <p>
+ * 클래스 설명
+ *
+ *<pre><br>
+ *<b>History:</b>
+ *		mhyoo, v1.0.0, 2015. 10. 30., 최초작성  
+ *</pre>
  * 
- * @author shimkangseop
- * @see HttpPooledServer, HttpPooledWorker
+ * @since 2015. 10. 30., mhyoo, v1.0.0, Created
+ * @version 1.0.0
+ * @author Min-Ho, Yoo
  *
  */
-public class HttpTestClient
+
+public class HttpClientAsThread implements Runnable
 {
 	HttpStatusListener listener;
+	JobEntity job;
 	
-	public HttpTestClient(){
+	public HttpClientAsThread(){
 		
 	}
 	
 	public void setHttpStatusListener(HttpStatusListener listener){
 		this.listener = listener;
+	}
+	
+	public void setJob(JobEntity job){
+		this.job = job;
 	}
 	
 	public HttpClient init_send_request()
@@ -121,5 +131,35 @@ public class HttpTestClient
 		}
 		
 		return sb.toString();
+	}
+
+	@Override
+	public void run() {
+		String uri = job.getAgent().url("crawl");
+
+		// -------------------------------------------------------
+		// Init Request ...
+		// -------------------------------------------------------
+		HttpClient httpClient = init_send_request();
+
+		if (httpClient == null)
+			return;
+
+		HashMap<String, String> params = job.makeReqestParamMap();
+
+		// ---------------------------------------------------------
+		// Make post method ...
+		// ---------------------------------------------------------
+		PostMethod method = make_post_method(uri, params);
+
+		if (method == null)
+			return;
+
+		// -------------------------------------------------------
+		// wait for response ...
+		// -------------------------------------------------------
+		String result = send_and_get_response(httpClient, method);
+		listener.onGetResponseFromAgent(params);
+		System.out.println(result);
 	}
 }

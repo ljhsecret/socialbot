@@ -8,11 +8,13 @@ import javax.security.auth.login.Configuration;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.log4j.Logger;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
+import kr.co.opensns.ksbiz.socialbot.balancer.exception.SharedJobTableException;
 import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpStatusListener;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpTestClient;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpClientAsThread;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;
 
 /**
@@ -37,67 +39,29 @@ public class JobManager implements Runnable {
 	SharedJobTable jobTable;
 	SeedManager seedManager;
 	AgentManager agentManager;
-	HttpTestClient client;
 	BalancerConfig conf;
-
-	public JobManager() {
-		jobTable = SharedJobTable.getInstance();
-		agentManager = new AgentManager(conf);
-		seedManager = new SeedManager(conf);
-		client = new HttpTestClient();
-		client.setHttpStatusListener(new HttpStatusListener() {
-
-			@Override
-			public void onSendRequestToAgent(Map<String, String> paramMap) {
-				// TODO Auto-generated method stub
-				System.out.println(paramMap.get("jobId") + " sent to agent");
-			}
-
-			@Override
-			public void onGetResponseFromAgent(Map<String, String> paramMap) {
-				// TODO Auto-generated method stub
-				System.out.println("Get response about "
-						+ paramMap.get("jobId") + "from agent");
-			}
-		});
-	}
+	Logger logger;
 
 	public JobManager(BalancerConfig conf) {
-		this.conf = conf;
-		jobTable = SharedJobTable.getInstance();
-		agentManager = new AgentManager(conf);
-		seedManager = new SeedManager(conf);
-		client = new HttpTestClient();
-		client.setHttpStatusListener(new HttpStatusListener() {
-
-			@Override
-			public void onSendRequestToAgent(Map<String, String> paramMap) {
-				// TODO Auto-generated method stub
-				System.out.println(paramMap.get("jobId") + " sent to agent");
-			}
-
-			@Override
-			public void onGetResponseFromAgent(Map<String, String> paramMap) {
-				// TODO Auto-generated method stub
-				System.out.println("Get response about "
-						+ paramMap.get("jobId") + "from agent");
-			}
-		});
+		logger = Logger.getLogger(this.getClass());
 		
-		try {
-			agentManager.load();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		jobTable = SharedJobTable.getInstance();
+		
+		agentManager = AgentManager.getInstance();
+		agentManager.setConfig(conf);
+		
+		seedManager = SeedManager.getinstance();
+		seedManager.setConfig(conf);
 	}
-
+	
 	public void run() {
 		while (true) {
 			int CheckResult = jobTable.checkRequireJob();
+			logger.info("Return value from jobtable : "+CheckResult);
 			if (CheckResult > 0) {
 				JobEntity job = buildJob();
-				doJob(job);
+				buildJobThread(job).start();
+				logger.info("do job");
 			}
 		}
 	}
@@ -111,32 +75,38 @@ public class JobManager implements Runnable {
 		return job;
 	}
 
-	public void doJob(JobEntity job) {
+	public Thread buildJobThread(final JobEntity job) {
+		HttpClientAsThread client;
+		client = new HttpClientAsThread();
+		client.setJob(job);
+		client.setHttpStatusListener(new HttpStatusListener() {
 
-		String uri = job.getAgent().url("crawl");
+			@Override
+			public void onSendRequestToAgent(Map<String, String> paramMap) {
+				// TODO Auto-generated method stub
+				System.out.println(paramMap.get("jobId") + " sent to agent");
+				try {
+					jobTable.put(job.getJobId(), job);
+				} catch (SharedJobTableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 
-		// -------------------------------------------------------
-		// Init Request ...
-		// -------------------------------------------------------
-		HttpClient httpClient = client.init_send_request();
-
-		if (httpClient == null)
-			return;
-
-		HashMap<String, String> params = job.makeReqestParamMap();
-
-		// ---------------------------------------------------------
-		// Make post method ...
-		// ---------------------------------------------------------
-		PostMethod method = client.make_post_method(uri, params);
-
-		if (method == null)
-			return;
-
-		// -------------------------------------------------------
-		// wait for response ...
-		// -------------------------------------------------------
-		String result = client.send_and_get_response(httpClient, method);
-		System.out.println(result);
+			@Override
+			public void onGetResponseFromAgent(Map<String, String> paramMap) {
+				// TODO Auto-generated method stub
+				System.out.println("Get response about "
+						+ paramMap.get("jobId") + " from agent");
+				try {
+					jobTable.update(job.getJobId(), JobStatus.WORKING);
+				} catch (SharedJobTableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		return new Thread(client);
 	}
 }

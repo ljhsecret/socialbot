@@ -24,23 +24,47 @@ import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 
 public class SeedManager {
 	
-	HashMap<String,SeedQueue> queueMap;
-	SeedLoader loader;
-	Logger logger;
+	private static SeedManager instance;
+    private HashMap<String,SeedQueue> queueMap;
+	private SeedLoader loader;
+	private Logger logger;
+	private BalancerConfig conf;
 	
-	public SeedManager(){
+	public static SeedManager getinstance(){
+		if(instance==null){
+			synchronized (SeedManager.class) {
+				instance = new SeedManager();
+				return instance;
+			}
+		}
+		return instance;
+	}
+	
+	private SeedManager(){
 		logger=Logger.getLogger(this.getClass());
 		queueMap = new HashMap<String,SeedQueue>();
 	}
 	
-	public SeedManager(BalancerConfig conf) {
-		this();
+	private void init(){
+		if(conf==null){
+			logger.info("Configuration setting was not complete");
+			return;
+		}
+			
 		List<HashMap<String,String>> seedconf = conf.getSeedConfig();
+		seedLoading(seedconf);
+	}
+	
+	private void seedLoading(List<HashMap<String,String>> seedconf) {
 		for (HashMap<String, String> map : seedconf){
 			if("local".equals(map.get("repository"))){
 				loader = new SeedLoader<FileSeedLoader>(FileSeedLoader.class);
 			} else
 				continue;
+			
+//			모듈화, Exception handling
+//			추가해야함
+			
 			SeedQueue q;
 			try {
 				String path = map.get("path");
@@ -56,6 +80,11 @@ public class SeedManager {
 				logger.info("SeedQueue Load fail");
 			}
 		}
+	}
+
+	public void setConfig(BalancerConfig conf) {
+		this.conf = conf;
+		init();
 	}
 
 	public SeedEntity getSeedEntity(String site){

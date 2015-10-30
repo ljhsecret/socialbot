@@ -8,7 +8,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
 import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpStatusListener;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpTestClient;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpClientAsThread;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
 
 /**
@@ -26,7 +26,7 @@ import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
  */
 
 public class JobEntity {
-	private enum JobState { READY, WORKING, DONE };
+	
 	
 	
 	private SeedEntity targetSeed;
@@ -40,11 +40,17 @@ public class JobEntity {
 	private String contentType;
 	
 	
-	JobState job;
-	public String ID;
+	JobStatus status;
+	static String ID = "0";
 	
 	public JobEntity(){
 		this(null,null);
+		this.status = JobStatus.READY;
+		ID = ""+(Integer.parseInt(ID)+1);
+	}
+	
+	public void setStatus(JobStatus status){
+		this.status = status;
 	}
 	
 	public JobEntity(SeedEntity seed, AgentInfo agent){
@@ -53,6 +59,10 @@ public class JobEntity {
 //		this.seed = seed.getSeed();
 //		this.cursor = seed.getCursor();
 //		this.crawlType = seed.getType();
+	}
+	
+	public String getJobId(){
+		return ID;
 	}
 	
 	public void setSeed(SeedEntity seed){
@@ -79,7 +89,7 @@ public class JobEntity {
 	public HashMap<String, String> makeReqestParamMap(){
 		HashMap<String, String> paramMap = new HashMap<String, String>();
 		
-		paramMap.put("jobId", "ID");
+		paramMap.put("jobId", seed);
 		paramMap.put("channelId", channelId);
 		paramMap.put("siteId", siteId);
 		paramMap.put("seed", seed);
