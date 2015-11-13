@@ -65,7 +65,7 @@ public class SharedJobTable {
 				
 				
 			} else {
-				throw new SharedJobTableException("Duplicate JobTable key : key - "+jobId);
+				throw new SharedJobTableException("Job key Not Found from JobTable  : key - "+jobId);
 			}
 		}
 	}
@@ -76,7 +76,7 @@ public class SharedJobTable {
 			if (SharedJobTable == null)
 				throw new NullPointerException();
 			if (SharedJobTable.containsKey(jobId)) {
-				throw new SharedJobTableException("");
+				throw new SharedJobTableException("Duplicate JobTable key : key - "+jobId);
 			}
 			SharedJobTable.put(jobId, job);
 			return;

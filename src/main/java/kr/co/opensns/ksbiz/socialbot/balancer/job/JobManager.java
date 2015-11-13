@@ -11,10 +11,12 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
+import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.SharedJobTableException;
 import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpStatusListener;
 import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpClientAsThread;
+import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;
 
 /**
@@ -32,74 +34,87 @@ import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;
  *
  */
 
-public class JobManager implements Runnable {
+public class JobManager /* implements Runnable */{
 
 	private static long TOT_JOB_COUNT;
 
 	SharedJobTable jobTable;
-	SeedManager seedManager;
-	AgentManager agentManager;
+
+	private static JobManager instance;
+
+	// SeedManager seedManager;
+	// AgentManager agentManager;
+
 	BalancerConfig conf;
+
 	Logger logger;
 
-	public JobManager(BalancerConfig conf) {
-		logger = Logger.getLogger(this.getClass());
-		
-		jobTable = SharedJobTable.getInstance();
-		jobTable.setJobStatusListener(new JobStatusListener() {
-			
-			@Override
-			public void onRequireJob() {
-				
-			}
-			
-			@Override
-			public void onOccurErrorJob(JobEntity job) {
-				
-			}
-			
-			@Override
-			public void onCompleteJob(JobEntity job) {
-				
-			}
-		});
-		
-		agentManager = AgentManager.getInstance();
-		agentManager.setConfig(conf);
-		
-		seedManager = SeedManager.getinstance();
-		seedManager.setConfig(conf);
-	}
-	
-	public void run() {
-		while (true) {
-			int CheckResult = jobTable.checkRequireJob();
-			
-			if (CheckResult > 0) {
-				logger.info("Return value from jobtable : "+CheckResult);
-				JobEntity job = buildJob();
-				buildJobThread(job).start();
-				try {
-					jobTable.put(job.getJobId(), job);
-				} catch (SharedJobTableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				logger.info("do job");
+	public static JobManager getInstance() {
+		if (instance == null) {
+			synchronized (JobManager.class) {
+				instance = new JobManager();
 			}
 		}
+		return instance;
 	}
 
-	public JobEntity buildJob() {
+	public void setConfig(BalancerConfig conf2) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private JobManager() {
+		logger = Logger.getLogger(this.getClass());
+
+		jobTable = SharedJobTable.getInstance();
+		jobTable.setJobStatusListener(new JobStatusListener() {
+
+			@Override
+			public void onRequireJob() {
+
+			}
+
+			@Override
+			public void onOccurErrorJob(JobEntity job) {
+
+			}
+
+			@Override
+			public void onCompleteJob(JobEntity job) {
+
+			}
+		});
+
+		// agentManager = AgentManager.getInstance();
+		// agentManager.setConfig(conf);
+		//
+		// seedManager = SeedManager.getinstance();
+		// seedManager.setConfig(conf);
+	}
+
+	public int checkRequireJob() {
+
+		return jobTable.checkRequireJob();
+
+	}
+
+	public JobEntity buildJob(SeedEntity seed, AgentInfo agent) {
 		JobEntity job = new JobEntity();
 
-		job.setAgent(agentManager.getAgentInfo());
-		job.setSeed(seedManager.getSeedEntity("instagram"));
-
+		job.setAgent(agent);
+		job.setSeed(seed);
+		
+		try {
+			jobTable.put(job.getJobId(), job);
+		} catch (SharedJobTableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return job;
 	}
 
-	public Thread buildJobThread(final JobEntity job) {
+	public void doJob(final JobEntity job) {
 		HttpClientAsThread client;
 		client = new HttpClientAsThread();
 		client.setJob(job);
@@ -108,7 +123,7 @@ public class JobManager implements Runnable {
 			@Override
 			public void onSendRequestToAgent(JobStatus status) {
 				// TODO Auto-generated method stub
-				System.out.println(job.getJobId() + " sent to agent");
+				System.out.println(job.getJobId() + " sent to agent - Job Id : "+job.getJobId());
 				try {
 					jobTable.update(job.getJobId(), status);
 				} catch (SharedJobTableException e) {
@@ -120,8 +135,8 @@ public class JobManager implements Runnable {
 			@Override
 			public void onGetResponseFromAgent(JobStatus status) {
 				// TODO Auto-generated method stub
-				System.out.println("Get response about "
-						+ job.getJobId() + " from agent");
+				System.out.println("Get response about " + job.getJobId()
+						+ " from agent");
 				try {
 					jobTable.update(job.getJobId(), status);
 				} catch (SharedJobTableException e) {
@@ -130,7 +145,8 @@ public class JobManager implements Runnable {
 				}
 			}
 		});
-		
-		return new Thread(client);
+
+		new Thread(client).start();
 	}
+
 }

@@ -1,8 +1,14 @@
 package kr.co.opensns.ksbiz.socialbot.balancer;
 
 import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
 import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpPooledServer;
+import kr.co.opensns.ksbiz.socialbot.balancer.job.JobEntity;
 import kr.co.opensns.ksbiz.socialbot.balancer.job.JobManager;
+import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;
 
 /**
  * 클래스 설명
@@ -19,17 +25,44 @@ import kr.co.opensns.ksbiz.socialbot.balancer.job.JobManager;
  *
  */
 
-public class Balancer {
+public class Balancer implements Runnable {
 
 	JobManager jobManager;
+	SeedManager seedManager;
+	AgentManager agentManager;
+
+	Logger logger;
 
 	public Balancer(BalancerConfig conf) {
-		jobManager = new JobManager(conf);
+		jobManager = JobManager.getInstance();
+		seedManager = SeedManager.getinstance();
+		agentManager = AgentManager.getInstance();
+
+		agentManager.setConfig(conf);
+		seedManager.setConfig(conf);
+		jobManager.setConfig(conf);
+
+		logger = Logger.getLogger(Balancer.class);
 	}
 
-	public void start() {
-		Thread th = new Thread(jobManager);
-		th.start();
+	@Override
+	public void run() {
+		long remainingJobCount;
+		while (true) {
+			if ((remainingJobCount = jobManager.checkRequireJob()) > 0) {
+				logger.info("Remaining Job Count : " + remainingJobCount);
+
+				JobEntity job = jobManager.buildJob(
+						seedManager.getSeedEntity(),
+						agentManager.getAgentInfo());
+
+				jobManager.doJob(job);
+			}
+		}
+	}
+
+	private void start() {
+		new Thread(this).start();
 	}
 
 	public static void main(String[] args) {
@@ -41,11 +74,12 @@ public class Balancer {
 		// --------------------------------------------------------------
 		balancer.start();
 		System.out.println("Balancer Started ...");
-		
+
 		// --------------------------------------------------------------
 		// Start Server ...
 		// --------------------------------------------------------------
 		new HttpPooledServer(8808).start();
 		System.out.println("Server Started ...");
 	}
+
 }

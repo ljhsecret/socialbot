@@ -87,11 +87,15 @@ public class SeedManager {
 		init();
 	}
 
-	public SeedEntity getSeedEntity(String site){
-		return queueMap.get(site).take();
+	public SeedEntity getSeedEntity(){
+		return queueMap.get(getSite()).take();
 	}
 
 	public void update(SeedEntity seed) {
 		
+	}
+	
+	private String getSite(){
+		return "instagram";
 	}
 }

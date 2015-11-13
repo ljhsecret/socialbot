@@ -11,6 +11,9 @@ import java.util.Map;
 
 import javax.xml.ws.Response;
 
+import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
+import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;
+
 import com.sun.net.httpserver.HttpExchange;
 
 
@@ -33,9 +36,14 @@ public class HttpPooledResultWorker extends HttpPooledWorker
 {
 	static int id=0;
 	
+	AgentManager agentManager;
+	SeedManager seedManager;
+	
 	public HttpPooledResultWorker(HttpExchange exchange)
 	{
 		super(exchange);
+		agentManager = AgentManager.getInstance();
+		seedManager = SeedManager.getinstance(); 
 	}
 	
 	public void run(HashMap<String, String> query_map)
