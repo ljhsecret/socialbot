@@ -1,4 +1,4 @@
-package kr.co.opensns.ksbiz.socialbot.balancer.http;
+package kr.co.opensns.ksbiz.socialbot.balancer.http.server.client;
 
 import java.util.Map;
 

@@ -5,7 +5,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpPooledServer;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.server.HttpPooledServer;
 import kr.co.opensns.ksbiz.socialbot.balancer.job.JobEntity;
 import kr.co.opensns.ksbiz.socialbot.balancer.job.JobManager;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;

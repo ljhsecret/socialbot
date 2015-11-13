@@ -1,4 +1,4 @@
-package kr.co.opensns.ksbiz.socialbot.balancer.http;
+package kr.co.opensns.ksbiz.socialbot.balancer.http.server;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

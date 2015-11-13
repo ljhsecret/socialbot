@@ -14,8 +14,8 @@ import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.SharedJobTableException;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpStatusListener;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpClientAsThread;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.server.client.HttpClientAsThread;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.server.client.HttpStatusListener;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;
 

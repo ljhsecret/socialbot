@@ -7,8 +7,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpStatusListener;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.HttpClientAsThread;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.server.client.HttpClientAsThread;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.server.client.HttpStatusListener;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
 
 /**
