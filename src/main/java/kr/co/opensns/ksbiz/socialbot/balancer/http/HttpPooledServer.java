@@ -41,13 +41,6 @@ public class HttpPooledServer {
 	/**
 	 * This variable represents Worker's class instance.
 	 */
-	private Class cls = null;
-
-	/**
-	 * The role of Handlers is to handle client's request by types of requests.
-	 */
-
-	private Class cls2 = null;
 
 	/**
 	 * 클래스 생성자<br>
@@ -61,8 +54,6 @@ public class HttpPooledServer {
 	 */
 	public HttpPooledServer(int port) {
 		this.port = port;
-		this.cls = HttpPooledResultWorker.class;
-		this.cls2 = HttpPooledBatchWorker.class;
 		// this.handlers = handlers;
 
 		init();
@@ -93,8 +84,9 @@ public class HttpPooledServer {
 
 		try {
 			HttpServer server = HttpServer.create(addr, 0);
-			server.createContext("/crawl", new HttpPooledCrawlHandler());
-			server.createContext("/status", new HttpPooledStatusHandler());
+			server.createContext("/batch", new HttpPooledHandler(HttpPooledBatchWorker.class));
+			server.createContext("/result", new HttpPooledHandler(HttpPooledResultWorker.class));
+			server.createContext("/monitor", new HttpPooledHandler(HttpPooledMonitorWorker.class));
 			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
 
@@ -109,40 +101,13 @@ public class HttpPooledServer {
 	 * @author goodsouls
 	 *
 	 */
-	private class HttpPooledCrawlHandler implements HttpHandler {
+
+	private class HttpPooledHandler implements HttpHandler {
 		private Constructor constructor = null;
 
-		public HttpPooledCrawlHandler() {
+		public HttpPooledHandler(Class cls) {
 			try {
 				constructor = cls.getConstructor(HttpExchange.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
-		}
-
-		/**
-		 * Thread Pool에 작업을 등록한다.
-		 * 
-		 * @param exchange
-		 *            http exchange 클래스
-		 * @exception IOException
-		 */
-		public void handle(HttpExchange exchange) throws IOException {
-			try {
-				execute((Runnable) constructor.newInstance(exchange));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private class HttpPooledStatusHandler implements HttpHandler {
-		private Constructor constructor = null;
-
-		public HttpPooledStatusHandler() {
-			try {
-				constructor = cls2.getConstructor(HttpExchange.class);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(1);

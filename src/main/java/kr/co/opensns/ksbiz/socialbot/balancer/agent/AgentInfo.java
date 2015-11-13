@@ -16,7 +16,7 @@ package kr.co.opensns.ksbiz.socialbot.balancer.agent;
  */
 
 public class AgentInfo implements Comparable<AgentInfo> {
-	private int jobCount;
+	private long jobCount;
 	private String ip;
 	private String port;
 
@@ -53,7 +53,7 @@ public class AgentInfo implements Comparable<AgentInfo> {
 		return jobCount * 100000000 + avrJobProcessingTime;
 	}
 
-	public int getJobCount() {
+	public long getJobCount() {
 		return jobCount;
 	}
 
@@ -73,7 +73,7 @@ public class AgentInfo implements Comparable<AgentInfo> {
 		return lastWorkingTime;
 	}
 
-	public void setJobCount(int jobCount) {
+	public void setJobCount(long jobCount) {
 		this.jobCount = jobCount;
 	}
 

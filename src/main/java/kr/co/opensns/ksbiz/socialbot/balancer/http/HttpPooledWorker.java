@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Exchanger;
 
+import org.apache.xerces.dom.DeferredEntityReferenceImpl;
+
 import com.sun.net.httpserver.HttpExchange;
 
 /**
@@ -38,6 +40,7 @@ public abstract class HttpPooledWorker implements Runnable
 	//--------------------------------------------------------------
 	// Delimiter related definitions ...
 	//--------------------------------------------------------------
+	protected final static char DELIM_STARTQUERY_STR	= '?';
 	protected final static String DELIM_QUERY_STR		= "[&]";
 	protected final static char DELIM_DEF				= '=';
 	
@@ -130,6 +133,10 @@ public abstract class HttpPooledWorker implements Runnable
 	protected HashMap<String, String> parseQueryString(String query_str) throws Exception
 	{
 		HashMap<String, String> query_map 				= new HashMap<String, String>();
+		
+		int SQindex;
+		if((SQindex=query_str.indexOf(DELIM_STARTQUERY_STR))>-1)
+			query_str = query_str.substring(SQindex+1);
 		
 		if(query_str == null)
 			return query_map;

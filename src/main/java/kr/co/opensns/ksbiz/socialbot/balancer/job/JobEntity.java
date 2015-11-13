@@ -27,11 +27,10 @@ import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
 
 public class JobEntity {
 	
-	
-	
 	private SeedEntity targetSeed;
 	private AgentInfo workingAgent;
 	
+	private long jobId;
 	private String channelId;
 	private String siteId;
 	private String seed;
@@ -41,12 +40,13 @@ public class JobEntity {
 	
 	
 	JobStatus status;
-	static String ID = "0";
+	
+	
 	
 	public JobEntity(){
 		this(null,null);
 		this.status = JobStatus.READY;
-		ID = ""+(Integer.parseInt(ID)+1);
+		this.jobId = System.currentTimeMillis();
 	}
 	
 	public void setStatus(JobStatus status){
@@ -62,7 +62,7 @@ public class JobEntity {
 	}
 	
 	public String getJobId(){
-		return ID;
+		return seed;
 	}
 	
 	public void setSeed(SeedEntity seed){
@@ -89,11 +89,13 @@ public class JobEntity {
 	public HashMap<String, String> makeReqestParamMap(){
 		HashMap<String, String> paramMap = new HashMap<String, String>();
 		
-		paramMap.put("jobId", seed);
+		paramMap.put("jobId", ""+jobId);
 		paramMap.put("channelId", channelId);
 		paramMap.put("siteId", siteId);
 		paramMap.put("seed", seed);
+		//코드화
 		paramMap.put("cursor", "");
+		//config
 		paramMap.put("crawlType", "");
 		paramMap.put("contentType", "JSON");
 		paramMap.put("return", "");

@@ -1,7 +1,7 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.exception;
 
 
-public class SharedJobTableException extends balancerException{
+public class SharedJobTableException extends BalancerException{
 
 	/**
 	 * 

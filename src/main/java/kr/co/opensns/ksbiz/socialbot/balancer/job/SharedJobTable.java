@@ -11,6 +11,8 @@ public class SharedJobTable {
 
 	private static HashMap<String, JobEntity> SharedJobTable;
 	private static SharedJobTable instance;
+	
+	private JobStatusListener listener;
 
 	private Logger logger;
 
@@ -28,6 +30,10 @@ public class SharedJobTable {
 		return instance;
 	}
 
+	public void setJobStatusListener(JobStatusListener listener){
+		this.listener = listener;
+	}
+	
 	public int checkRequireJob() {
 		synchronized (SharedJobTable.class) {
 			int curSize = SharedJobTable.size();
@@ -45,6 +51,7 @@ public class SharedJobTable {
 				if(status == JobStatus.DONE){
 					SharedJobTable.remove(jobId);
 					logger.info("Job was done : Job ID - " +jobId);
+					
 					return;
 				}
 				
@@ -60,7 +67,6 @@ public class SharedJobTable {
 			} else {
 				throw new SharedJobTableException("Duplicate JobTable key : key - "+jobId);
 			}
-			// SharedJobTable.put(jobKey, field);
 		}
 	}
 

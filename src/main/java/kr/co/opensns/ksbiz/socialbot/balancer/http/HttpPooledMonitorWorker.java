@@ -12,8 +12,9 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpExchange;
 
 
+
 /**
- * batch context에 대한 비지니스 로직을 처리하는 클래스
+ * result context에 대한 비지니스 로직을 처리하는 클래스
  *
  *<pre><br>
  *<b>History:</b>
@@ -26,32 +27,30 @@ import com.sun.net.httpserver.HttpExchange;
  *
  */
 
-public class HttpPooledBatchWorker extends HttpPooledWorker
+public class HttpPooledMonitorWorker extends HttpPooledWorker
 {
 	static int id=0;
 	
-	public HttpPooledBatchWorker(HttpExchange exchange)
+	public HttpPooledMonitorWorker(HttpExchange exchange)
 	{
 		super(exchange);
 	}
 	
 	public void run(HashMap<String, String> query_map)
 	{
-		System.out.println((id++) +" Batch worker running..");
+		System.out.println((id++) +" Result worker running..");
 		
 		if(exchange == null)
 			return;
 		
 		OutputStream out								= null;
 		
-		System.out.println(query_map);
-		
-		
 		try
 		{
 			exchange.sendResponseHeaders(200, 0);
 			out											= exchange.getResponseBody();
 			
+		
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{

@@ -46,6 +46,23 @@ public class JobManager implements Runnable {
 		logger = Logger.getLogger(this.getClass());
 		
 		jobTable = SharedJobTable.getInstance();
+		jobTable.setJobStatusListener(new JobStatusListener() {
+			
+			@Override
+			public void onRequireJob() {
+				
+			}
+			
+			@Override
+			public void onOccurErrorJob(JobEntity job) {
+				
+			}
+			
+			@Override
+			public void onCompleteJob(JobEntity job) {
+				
+			}
+		});
 		
 		agentManager = AgentManager.getInstance();
 		agentManager.setConfig(conf);
@@ -57,10 +74,17 @@ public class JobManager implements Runnable {
 	public void run() {
 		while (true) {
 			int CheckResult = jobTable.checkRequireJob();
-			logger.info("Return value from jobtable : "+CheckResult);
+			
 			if (CheckResult > 0) {
+				logger.info("Return value from jobtable : "+CheckResult);
 				JobEntity job = buildJob();
 				buildJobThread(job).start();
+				try {
+					jobTable.put(job.getJobId(), job);
+				} catch (SharedJobTableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				logger.info("do job");
 			}
 		}
@@ -82,11 +106,11 @@ public class JobManager implements Runnable {
 		client.setHttpStatusListener(new HttpStatusListener() {
 
 			@Override
-			public void onSendRequestToAgent(Map<String, String> paramMap) {
+			public void onSendRequestToAgent(JobStatus status) {
 				// TODO Auto-generated method stub
-				System.out.println(paramMap.get("jobId") + " sent to agent");
+				System.out.println(job.getJobId() + " sent to agent");
 				try {
-					jobTable.put(job.getJobId(), job);
+					jobTable.update(job.getJobId(), status);
 				} catch (SharedJobTableException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -94,12 +118,12 @@ public class JobManager implements Runnable {
 			}
 
 			@Override
-			public void onGetResponseFromAgent(Map<String, String> paramMap) {
+			public void onGetResponseFromAgent(JobStatus status) {
 				// TODO Auto-generated method stub
 				System.out.println("Get response about "
-						+ paramMap.get("jobId") + " from agent");
+						+ job.getJobId() + " from agent");
 				try {
-					jobTable.update(job.getJobId(), JobStatus.WORKING);
+					jobTable.update(job.getJobId(), status);
 				} catch (SharedJobTableException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

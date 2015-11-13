@@ -9,6 +9,8 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.ws.Response;
+
 import com.sun.net.httpserver.HttpExchange;
 
 
@@ -38,7 +40,7 @@ public class HttpPooledResultWorker extends HttpPooledWorker
 	
 	public void run(HashMap<String, String> query_map)
 	{
-		System.out.println((id++) +" Crawl worker running..");
+		System.out.println((id++) +" Result worker running..");
 		
 		if(exchange == null)
 			return;
@@ -50,7 +52,8 @@ public class HttpPooledResultWorker extends HttpPooledWorker
 			exchange.sendResponseHeaders(200, 0);
 			out											= exchange.getResponseBody();
 			
-		
+			
+//			out.write();
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{

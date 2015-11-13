@@ -14,14 +14,14 @@ package kr.co.opensns.ksbiz.socialbot.balancer.exception;
  *
  */
 
-public class balancerException extends Exception{
+public class BalancerException extends Exception{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public balancerException(String msg){
+	public BalancerException(String msg){
 		super(msg);
 	}
 }

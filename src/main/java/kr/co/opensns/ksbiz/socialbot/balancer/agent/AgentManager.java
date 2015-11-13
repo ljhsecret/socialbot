@@ -12,10 +12,14 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.sql.rowset.spi.SyncResolver;
+import javax.swing.text.GapContent;
 
 import org.apache.log4j.Logger;
 
@@ -39,19 +43,18 @@ import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 public class AgentManager {
 
 	private static AgentManager instance;
-	private AgentQueue agentQueue;
+	private PriorityTable agentQueue;
 	private String localFilePath = "config/agents.csv";
 	private Logger logger;
 	private BalancerConfig conf;
-	
-	
+
 	private AgentManager() {
-		agentQueue = new AgentQueue();
+		agentQueue = new PriorityTable(new AgentComprator());
 		logger = Logger.getLogger(this.getClass());
 	}
-	
-	public static AgentManager getInstance(){
-		if(instance==null){
+
+	public static AgentManager getInstance() {
+		if (instance == null) {
 			synchronized (AgentManager.class) {
 				instance = new AgentManager();
 			}
@@ -74,51 +77,87 @@ public class AgentManager {
 	}
 
 	public void load() throws FileNotFoundException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				new FileInputStream(new File(localFilePath))));
-		String line;
+		List<HashMap<String, String>> a = conf.getAgentConfig();
+
+		Map<String, Map<String, String>> backupData = loadBackUpDataToMap();
+		
+		for (HashMap<String, String> m : a) {
+			AgentInfo agent = new AgentInfo();
+			agent.setIp(m.get("ip"));
+			agent.setPort(m.get("port"));
+			
+			if(backupData.containsKey(agent.getIp())){
+				Map<String,String> tmpMap = backupData.get(agent.getIp());
+				
+				String AverJobProcessingTime =tmpMap.get("AvrJobProcessingTime");
+				String JobCount = tmpMap.get("JobCount");
+				String LastWorkingTime = tmpMap.get("LastWorkingTime");
+				
+				agent.setAvrJobProcessingTime(AverJobProcessingTime.equals("null")?0:Long.parseLong(AverJobProcessingTime));
+				agent.setJobCount(JobCount.equals("null")?0:Long.parseLong(JobCount));
+				agent.setLastWorkingTime(LastWorkingTime.equals("null")?0:Long.parseLong(LastWorkingTime));
+			}
+
+			agentQueue.put(agent);
+		}
+		
+		a=null;
+		
+		logger.info("Seed Queue Loading Done");
+		
+	}
+
+	public Map<String, Map<String, String>> loadBackUpDataToMap() {
+		Map<String, Map<String, String>> tmp = new HashMap<String, Map<String, String>>();
+
 		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					new FileInputStream(new File(localFilePath))));
+			String line;
+
 			logger.info("AgentInfo start loading");
 			while ((line = br.readLine()) != null) {
 				String[] csv = line.split(",");
-
 				if (csv.length < 5)
 					continue;
 
-				AgentInfo agent = new AgentInfo();
-				agent.setIp(csv[0]);
-				agent.setPort(csv[1]);
-				agent.setLastWorkingTime(csv[2].equals("null")?0:Long.parseLong(csv[2]));
-				agent.setJobCount(csv[2].equals("null")?0:Integer.parseInt(csv[3]));
-				agent.setAvrJobProcessingTime(csv[2].equals("null")?0:Long.parseLong(csv[4]));
-				
-				agentQueue.put(agent);
-				logger.info("agent Load done : "+agent.getIp());
+				HashMap<String, String> fields = new HashMap<String, String>();
+
+				fields.put("port", csv[1]);
+				fields.put("LastWorkingTime", csv[2].equals("null") ? "0"
+						: csv[2]);
+				fields.put("JobCount", csv[3].equals("null") ? "0" : csv[3]);
+				fields.put("AvrJobProcessingTime", csv[4].equals("null") ? "0"
+						: csv[4]);
+
+				tmp.put(csv[0], fields);
+				logger.info("agent Load done : " + csv[0]);
 			}
 
 			br.close();
 		} catch (NumberFormatException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			tmp = null;
 		}
+
+		return tmp;
 	}
 
-//	public void save() throws IOException {
-//		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-//				new FileOutputStream(new File(localFilePath))));
-//
-//		for (AgentInfo agent : AgentList) {
-//			bw.write(agent.toCSV());
-//			bw.newLine();
-//		}
-//		bw.close();
-//	}
-//
-//	public void update(String ID, Map<String, String> field) {
-//		synchronized (AgentManager.class) {
-//			AgentList.get(0);
-//			field.get("status");
-//			field.get("Processing Time");
-//		}
-//	}
+	public void save() throws IOException {
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(new File(localFilePath))));
+
+//		while(agentQueue.)
+		
+		bw.close();
+	}
+
+	//
+	public void update(String ID, Map<String, String> field) {
+		synchronized (AgentManager.class) {
+			field.get("status");
+			field.get("Processing Time");
+		}
+	}
 }
