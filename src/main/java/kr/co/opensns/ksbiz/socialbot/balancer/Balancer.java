@@ -41,6 +41,8 @@ public class Balancer implements Runnable {
 		agentManager.setConfig(conf);
 		seedManager.setConfig(conf);
 		jobManager.setConfig(conf);
+		
+		
 
 		logger = Logger.getLogger(Balancer.class);
 	}

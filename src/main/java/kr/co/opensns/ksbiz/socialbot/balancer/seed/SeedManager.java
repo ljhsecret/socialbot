@@ -3,6 +3,7 @@ package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -11,10 +12,11 @@ import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 /**
  * 클래스 설명
  *
- *<pre><br>
- *<b>History:</b>
- *		mhyoo, v1.0.0, 2015. 10. 20., 최초작성  
- *</pre>
+ * <pre>
+ * <br>
+ * <b>History:</b>
+ * 		mhyoo, v1.0.0, 2015. 10. 20., 최초작성
+ * </pre>
  * 
  * @since 2015. 10. 20., mhyoo, v1.0.0, Created
  * @version 1.0.0
@@ -23,15 +25,22 @@ import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
  */
 
 public class SeedManager {
-	
+
 	private static SeedManager instance;
-    private HashMap<String,SeedQueue> queueMap;
+	private HashMap<String, SeedQueue> queueMap;
 	private SeedLoader loader;
 	private Logger logger;
-	private BalancerConfig conf;
+	private List<HashMap<String, String>> seedConfig;
+
+	private Map<String, Double> weightPerSite;
+	private Map<String, Integer> jobCountPerSite;
+
+	private int sumOfWeight;
 	
-	public static SeedManager getinstance(){
-		if(instance==null){
+	private static int TOTAL_JOB_COUNT = 0;
+
+	public static SeedManager getinstance() {
+		if (instance == null) {
 			synchronized (SeedManager.class) {
 				instance = new SeedManager();
 				return instance;
@@ -39,63 +48,105 @@ public class SeedManager {
 		}
 		return instance;
 	}
-	
-	private SeedManager(){
-		logger=Logger.getLogger(this.getClass());
-		queueMap = new HashMap<String,SeedQueue>();
+
+	private SeedManager() {
+		logger = Logger.getLogger(this.getClass());
+		queueMap = new HashMap<String, SeedQueue>();
 	}
-	
-	private void init(){
-		if(conf==null){
-			logger.info("Configuration setting was not complete");
-			return;
-		}
-			
-		List<HashMap<String,String>> seedconf = conf.getSeedConfig();
-		seedLoading(seedconf);
+
+	private void init() {
+		weightPerSite = new HashMap<String,Double>();
+		jobCountPerSite = new HashMap<String,Integer>();
 	}
-	
-	private void seedLoading(List<HashMap<String,String>> seedconf) {
-		for (HashMap<String, String> map : seedconf){
-			if("local".equals(map.get("repository"))){
+
+	private void Load() {
+		for (HashMap<String, String> map : seedConfig) {
+			if ("local".equals(map.get("repository"))) {
 				loader = new SeedLoader<FileSeedLoader>(FileSeedLoader.class);
 			} else
 				continue;
-			
-//			모듈화, Exception handling
-//			추가해야함
-			
+
+			// 모듈화, Exception handling
+			// 추가해야함
+
 			SeedQueue q;
 			try {
 				String path = map.get("path");
 				String site = map.get("site");
 				String type = map.get("type");
-				q = loader.LoadSeedQueue(path,site+"-"+type);
-				queueMap.put(site,q);
-				logger.info("SeedQueue Load done : "+site+"-"+type);
+				String key = site + "-" + type;
+				q = loader.LoadSeedQueue(path, key);
+				queueMap.put(key, q);
+				logger.info("SeedQueue Load done : " + key);
 			} catch (InstantiationException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException e) {
-//				e.printStackTrace();
+				// e.printStackTrace();
 				logger.info("SeedQueue Load fail");
 			}
 		}
 	}
 
 	public void setConfig(BalancerConfig conf) {
-		this.conf = conf;
+		if (conf == null) {
+			logger.info("Configuration setting was not complete");
+			return;
+		}
+		seedConfig = conf.getSeedConfig();
+
 		init();
+		initWeightValue();
+		Load();
 	}
 
-	public SeedEntity getSeedEntity(){
-		return queueMap.get(getSite()).take();
+	private void initWeightValue() {
+		for (HashMap<String, String> map : seedConfig) {
+			int weight = Integer.parseInt(map.get("weight"));
+			sumOfWeight += weight;
+		}
+
+		for (HashMap<String, String> map : seedConfig) {
+			String key = map.get("site")+"-"+map.get("type");
+			int weight = Integer.parseInt(map.get("weight"));
+
+			double rate = (double) weight/sumOfWeight;
+			
+			weightPerSite.put(key, rate);
+			jobCountPerSite.put(key, 0);
+		}
+	}
+
+	public SeedEntity getSeedEntity() {
+		String site = getSite();
+		SeedEntity seed = queueMap.get(site).take();
+		TOTAL_JOB_COUNT ++;
+		jobCountPerSite.put(site, jobCountPerSite.get(site)+1);
+		logger.info("GET SEED : site - "+site+", seed - "+seed.getSeed()+", priority - "+seed.getPriority() );
+		return seed;
 	}
 
 	public void update(SeedEntity seed) {
-		
+
 	}
-	
-	private String getSite(){
-		return "instagram";
+
+	private String getSite() {
+		String site=null;
+		double distance=0;
+		
+		for (String key : weightPerSite.keySet()) {
+			double weight = weightPerSite.get(key);
+			int jobCount = jobCountPerSite.get(key);
+			
+			if(TOTAL_JOB_COUNT==0 || jobCount == 0) return key; 
+			
+			double tmpdistance = (double) jobCount/TOTAL_JOB_COUNT-weight;
+			
+			if(distance<tmpdistance){
+				distance = tmpdistance;
+				site = key;
+			}
+		}
+
+		return site;
 	}
 }

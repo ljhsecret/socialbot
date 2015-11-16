@@ -29,6 +29,7 @@ public class BalancerConfig {
 	private List<HashMap<String,String>> seedInfoList;
 	private List<HashMap<String,String>> agentInfoList;
 	
+	private HashMap<String,String> jobWeight;
 	
 	Logger logger;
 

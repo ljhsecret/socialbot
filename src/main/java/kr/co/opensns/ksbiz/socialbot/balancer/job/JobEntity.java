@@ -7,8 +7,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.server.client.HttpClientAsThread;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.server.client.HttpStatusListener;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.client.HttpClientAsThread;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.client.HttpStatusListener;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
 
 /**
@@ -46,7 +46,7 @@ public class JobEntity {
 	public JobEntity(){
 		this(null,null);
 		this.status = JobStatus.READY;
-		this.jobId = System.currentTimeMillis();
+		this.jobId = System.nanoTime();
 	}
 	
 	public void setStatus(JobStatus status){
@@ -62,7 +62,7 @@ public class JobEntity {
 	}
 	
 	public String getJobId(){
-		return seed;
+		return ""+jobId;
 	}
 	
 	public void setSeed(SeedEntity seed){

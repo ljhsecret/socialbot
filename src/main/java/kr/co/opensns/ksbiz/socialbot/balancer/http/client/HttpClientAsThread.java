@@ -1,4 +1,4 @@
-package kr.co.opensns.ksbiz.socialbot.balancer.http.server.client;
+package kr.co.opensns.ksbiz.socialbot.balancer.http.client;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="myBatisManageList">
+	
+    <insert id="insertAnalHistory" parameterType="AnalWorkManager">
+        INSERT INTO ANALS_WORK_HIT_INFO
+        (
+        	TPIC_SN,
+        	ANALS_WORK_STTUS_CODE,
+        	REGISTER_ID,
+        	ANALS_BGNDE_HOUR
+        )
+        VALUES
+        (
+			#{topicSequnceNumber},
+			#{jobStatus},
+			#{requester},
+			#{analBeginDate}
+        )
+    </insert>
+    
+    <update id="updateAnalStatus" parameterType="AnalWorkManager">
+    	UPDATE ANALS_WORK_HIT_INFO
+    	SET ANALS_WORK_STTUS_CODE=#{jobStatus}
+    	WHERE TPIC_SN=#{topicSequnceNumber}
+    	AND ANALS_BGNDE_HOUR=#{StringAnalBeginDate}
+    </update>
+    
+    <update id="updateEndStatus" parameterType="AnalWorkManager">
+    	UPDATE ANALS_WORK_HIT_INFO
+    	SET ANALS_WORK_STTUS_CODE=#{jobStatus},
+    		ANALS_ENDDE_HOUR=#{analEndDate},
+    		ERROR_CN=#{errorMsg}
+    	WHERE TPIC_SN=#{topicSequnceNumber}
+    	AND ANALS_BGNDE_HOUR=#{StringAnalBeginDate}
+    </update>
+    
+    
+</mapper>
