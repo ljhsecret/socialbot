@@ -43,7 +43,7 @@ public class HttpPooledResultWorker extends HttpPooledWorker {
 		agentManager = AgentManager.getInstance();
 		seedManager = SeedManager.getinstance();
 		jobManager = JobManager.getInstance();
-//		jobManager.
+		// jobManager.
 	}
 
 	public void run(HashMap<String, String> query_map) {
@@ -54,8 +54,21 @@ public class HttpPooledResultWorker extends HttpPooledWorker {
 
 		query_map.get("jobId");
 		query_map.get("Content-Type");
+		query_map.get("elapsedTime");
+		query_map.get("crawledCount");
+
+		switch (query_map.get("StatusCode")) {
+		case "01":
+			
+			break;
 		
-		
+		case "02":
+
+			break;
+
+		default:
+			break;
+		}
 		OutputStream out = null;
 
 		try {

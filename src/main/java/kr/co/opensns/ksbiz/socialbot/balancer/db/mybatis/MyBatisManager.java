@@ -9,6 +9,8 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.db.mybatis;
 
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.Reader;
 
 import org.apache.ibatis.io.Resources;
@@ -22,8 +24,20 @@ public class MyBatisManager {
 	public static SqlSessionFactory getInstance(){
 		if(sqlMapper == null){
 			try{
-				String resource = "kr/co/opensns/bo/biga/mybatis/Configuration.xml";
-				Reader reader = Resources.getResourceAsReader(resource);
+				System.out.println(new File(".").getCanonicalPath());
+				System.out.println(System.getProperty("user.dir"));
+				if(new File(System.getProperty("user.dir")+"\\Configuration.xml").exists())
+					System.out.println("exist");
+					
+				String path="kr/co/opensns/ksbiz/socialbot/balancer/db/mybatis/Configuration.xml";
+				if(new File(path).exists())
+					System.out.println(path + " exist");
+				else
+					System.out.println("not exist");
+				
+//				String resource = "src/main/java/kr/co/opensns/ksbiz/socialbot/balancer/db/mybatis/Configuration.xml";
+				Reader reader = Resources.getResourceAsReader(path);
+//				Reader reader = new FileReader(new File(resource));
 				sqlMapper = new SqlSessionFactoryBuilder().build(reader);
 				reader.close();
 			}catch(Exception e){

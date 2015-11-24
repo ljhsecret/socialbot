@@ -3,6 +3,12 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="myBatisSelectList">
 
+	<select id="selectTestData" resultType="hMap" parameterType="int">
+		SELECT *
+		FROM seed_info
+	</select>
+
+<!-- 
 	<select id="selectTopicData" resultType="hMap" parameterType="int">
 		SELECT *
 		FROM TPIC_INFO
@@ -23,4 +29,5 @@
 		WHERE TPIC_SN=#{tpicSN}
 	</select>
 	
+ -->
 </mapper>

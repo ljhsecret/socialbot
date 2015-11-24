@@ -20,6 +20,19 @@ public class ConnectionFactory {
 	public static final String NAME_SPACE_MANAGE = "myBatisManageList.";
 	public static SqlSessionFactory sqlMapper = MyBatisManager.getInstance();
 
+	public List<Map<String, Object>> ConnectionTest(int top_seq) {
+		SqlSession session = sqlMapper.openSession();
+		List<Map<String, Object>> hmap = null;
+		try {
+			hmap = session.selectList(NAME_SPACE_SELECT + "selectTestData",
+					top_seq);
+		} finally {
+			session.commit();
+			session.close();
+		}
+		return hmap;
+	}
+	/*
 	public Map<String, Object> selectTopicData(int top_seq) {
 		SqlSession session = sqlMapper.openSession();
 		Map<String, Object> hmap = null;
@@ -98,5 +111,5 @@ public class ConnectionFactory {
 			session.close();
 			System.out.println("End State Update done");
 		}
-	}
+	}*/
 }

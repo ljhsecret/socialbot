@@ -137,11 +137,13 @@ public class SeedManager {
 			double weight = weightPerSite.get(key);
 			int jobCount = jobCountPerSite.get(key);
 			
-			if(TOTAL_JOB_COUNT==0 || jobCount == 0) return key; 
+			if(TOTAL_JOB_COUNT==0 || jobCount == 0){
+				return key; 
+			}
 			
 			double tmpdistance = (double) jobCount/TOTAL_JOB_COUNT-weight;
 			
-			if(distance<tmpdistance){
+			if(distance>=tmpdistance){
 				distance = tmpdistance;
 				site = key;
 			}

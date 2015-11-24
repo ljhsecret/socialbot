@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="myBatisManageList">
-	
+	<!-- 
     <insert id="insertAnalHistory" parameterType="AnalWorkManager">
         INSERT INTO ANALS_WORK_HIT_INFO
         (
@@ -35,6 +35,6 @@
     	WHERE TPIC_SN=#{topicSequnceNumber}
     	AND ANALS_BGNDE_HOUR=#{StringAnalBeginDate}
     </update>
-    
+     -->
     
 </mapper>

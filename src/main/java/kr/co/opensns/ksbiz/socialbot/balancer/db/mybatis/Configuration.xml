@@ -2,11 +2,11 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-	<properties resource="kr/co/opensns/bo/biga/mybatis/properties" />
+	<properties resource="kr/co/opensns/ksbiz/socialbot/balancer/db/mybatis/properties" />
 	
 	<typeAliases>
 		<typeAlias alias="hMap" type="java.util.HashMap" />
-		<typeAlias alias="AnalWorkManager" type="kr.co.opensns.bo.biga.analyzer.AnalWorkManager"/>
+		<!-- <typeAlias alias="AnalWorkManager" type="kr.co.opensns.bo.biga.analyzer.AnalWorkManager"/> -->
 	</typeAliases>
 	
 	<environments default="development">
@@ -22,7 +22,7 @@
 	</environments>
 	
 	<mappers>
-		<mapper resource="kr/co/opensns/bo/biga/mybatis/myBatisSelectList.xml" />
-		<mapper resource="kr/co/opensns/bo/biga/mybatis/myBatisManageList.xml" />
+		<mapper resource="kr/co/opensns/ksbiz/socialbot/balancer/db/mybatis/myBatisSelectList.xml" />
+		<mapper resource="kr/co/opensns/ksbiz/socialbot/balancer/db/mybatis/myBatisManageList.xml" />
 	</mappers>
 </configuration>

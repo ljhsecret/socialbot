@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
+import kr.co.opensns.ksbiz.socialbot.balancer.db.mybatis.ConnectionFactory;
 import kr.co.opensns.ksbiz.socialbot.balancer.http.server.HttpPooledServer;
 import kr.co.opensns.ksbiz.socialbot.balancer.job.JobEntity;
 import kr.co.opensns.ksbiz.socialbot.balancer.job.JobManager;
@@ -75,6 +76,9 @@ public class Balancer implements Runnable {
 		// Start balancer ...
 		// --------------------------------------------------------------
 		balancer.start();
+//		ConnectionFactory cf = new ConnectionFactory();
+//		System.out.println(cf.ConnectionTest(0));
+		
 		System.out.println("Balancer Started ...");
 
 		// --------------------------------------------------------------
