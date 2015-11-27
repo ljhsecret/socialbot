@@ -66,7 +66,6 @@ public class HttpPooledResultWorker extends HttpPooledWorker {
 			case "02":
 				
 				break;
-				sxcva
 				
 				
 				
