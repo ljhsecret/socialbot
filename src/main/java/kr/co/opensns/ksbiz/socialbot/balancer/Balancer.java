@@ -42,8 +42,6 @@ public class Balancer implements Runnable {
 		agentManager.setConfig(conf);
 		seedManager.setConfig(conf);
 		jobManager.setConfig(conf);
-		
-		
 
 		logger = Logger.getLogger(Balancer.class);
 	}
@@ -87,5 +85,4 @@ public class Balancer implements Runnable {
 		new HttpPooledServer(8808).start();
 		System.out.println("Server Started ...");
 	}
-
 }

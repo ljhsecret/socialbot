@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
+import kr.co.opensns.ksbiz.socialbot.balancer.exception.BalancerException;
 
 /**
  * 클래스 설명
@@ -28,6 +29,7 @@ public class SeedManager {
 
 	private static SeedManager instance;
 	private HashMap<String, SeedQueue> queueMap;
+	@SuppressWarnings("rawtypes")
 	private SeedLoader loader;
 	private Logger logger;
 	private List<HashMap<String, String>> seedConfig;
@@ -36,7 +38,7 @@ public class SeedManager {
 	private Map<String, Integer> jobCountPerSite;
 
 	private int sumOfWeight;
-	
+
 	private static int TOTAL_JOB_COUNT = 0;
 
 	public static SeedManager getinstance() {
@@ -55,15 +57,21 @@ public class SeedManager {
 	}
 
 	private void init() {
-		weightPerSite = new HashMap<String,Double>();
-		jobCountPerSite = new HashMap<String,Integer>();
+		weightPerSite = new HashMap<String, Double>();
+		jobCountPerSite = new HashMap<String, Integer>();
 	}
 
-	private void Load() {
+	private void Load() throws Exception {
 		for (HashMap<String, String> map : seedConfig) {
-			if ("local".equals(map.get("repository"))) {
+			String repository = map.get("repository");
+			if (repository == null)
+				throw new BalancerException("seed repository is empty");
+
+			if ("local".equals(repository)) {
 				loader = new SeedLoader<FileSeedLoader>(FileSeedLoader.class);
-			} else
+			} else if ("db".equals(repository))
+				loader = new SeedLoader<DBSeedLoader>(DBSeedLoader.class);
+			else
 				continue;
 
 			// 모듈화, Exception handling
@@ -96,7 +104,11 @@ public class SeedManager {
 
 		init();
 		initWeightValue();
-		Load();
+		try {
+			Load();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void initWeightValue() {
@@ -106,11 +118,11 @@ public class SeedManager {
 		}
 
 		for (HashMap<String, String> map : seedConfig) {
-			String key = map.get("site")+"-"+map.get("type");
+			String key = map.get("site") + "-" + map.get("type");
 			int weight = Integer.parseInt(map.get("weight"));
 
-			double rate = (double) weight/sumOfWeight;
-			
+			double rate = (double) weight / sumOfWeight;
+
 			weightPerSite.put(key, rate);
 			jobCountPerSite.put(key, 0);
 		}
@@ -119,31 +131,32 @@ public class SeedManager {
 	public SeedEntity getSeedEntity() {
 		String site = getSite();
 		SeedEntity seed = queueMap.get(site).take();
-		TOTAL_JOB_COUNT ++;
-		jobCountPerSite.put(site, jobCountPerSite.get(site)+1);
-		logger.info("GET SEED : site - "+site+", seed - "+seed.getSeed()+", priority - "+seed.getPriority() );
+		TOTAL_JOB_COUNT++;
+		jobCountPerSite.put(site, jobCountPerSite.get(site) + 1);
+		logger.info("GET SEED : site - " + site + ", seed - " + seed.getSeed()
+				+ ", priority - " + seed.getPriority());
 		return seed;
 	}
 
-	public void update(SeedEntity seed) {
+	public void update(String seed, Map<String, String> fields) {
 
 	}
 
 	private String getSite() {
-		String site=null;
-		double distance=0;
-		
+		String site = null;
+		double distance = 0;
+
 		for (String key : weightPerSite.keySet()) {
 			double weight = weightPerSite.get(key);
 			int jobCount = jobCountPerSite.get(key);
-			
-			if(TOTAL_JOB_COUNT==0 || jobCount == 0){
-				return key; 
+
+			if (TOTAL_JOB_COUNT == 0 || jobCount == 0) {
+				return key;
 			}
-			
-			double tmpdistance = (double) jobCount/TOTAL_JOB_COUNT-weight;
-			
-			if(distance>=tmpdistance){
+
+			double tmpdistance = (double) jobCount / TOTAL_JOB_COUNT - weight;
+
+			if (distance >= tmpdistance) {
 				distance = tmpdistance;
 				site = key;
 			}

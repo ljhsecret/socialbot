@@ -30,14 +30,8 @@ public class MyBatisManager {
 					System.out.println("exist");
 					
 				String path="kr/co/opensns/ksbiz/socialbot/balancer/db/mybatis/Configuration.xml";
-				if(new File(path).exists())
-					System.out.println(path + " exist");
-				else
-					System.out.println("not exist");
 				
-//				String resource = "src/main/java/kr/co/opensns/ksbiz/socialbot/balancer/db/mybatis/Configuration.xml";
 				Reader reader = Resources.getResourceAsReader(path);
-//				Reader reader = new FileReader(new File(resource));
 				sqlMapper = new SqlSessionFactoryBuilder().build(reader);
 				reader.close();
 			}catch(Exception e){

@@ -19,14 +19,16 @@
 			#{analBeginDate}
         )
     </insert>
+    -->
     
-    <update id="updateAnalStatus" parameterType="AnalWorkManager">
-    	UPDATE ANALS_WORK_HIT_INFO
+    <update id="updateSeedInfo" parameterType="hMap">
+    	UPDATE SEED_INFO
     	SET ANALS_WORK_STTUS_CODE=#{jobStatus}
     	WHERE TPIC_SN=#{topicSequnceNumber}
     	AND ANALS_BGNDE_HOUR=#{StringAnalBeginDate}
     </update>
     
+    <!-- 
     <update id="updateEndStatus" parameterType="AnalWorkManager">
     	UPDATE ANALS_WORK_HIT_INFO
     	SET ANALS_WORK_STTUS_CODE=#{jobStatus},

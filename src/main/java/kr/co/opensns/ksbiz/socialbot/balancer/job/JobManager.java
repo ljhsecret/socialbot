@@ -42,9 +42,6 @@ public class JobManager /* implements Runnable */{
 
 	private static JobManager instance;
 
-	// SeedManager seedManager;
-	// AgentManager agentManager;
-
 	BalancerConfig conf;
 
 	Logger logger;
@@ -78,7 +75,8 @@ public class JobManager /* implements Runnable */{
 
 			@Override
 			public void onOccurErrorJob(JobEntity job) {
-
+				AgentInfo agent = job.getAgent();
+				SeedEntity seed = job.getSeed();
 			}
 
 			@Override
@@ -115,6 +113,11 @@ public class JobManager /* implements Runnable */{
 		
 		return job;
 	}
+	
+	public JobEntity getJobEntity(String jobId){
+//		jobTable.
+		return null;
+	}
 
 	public void doJob(final JobEntity job) {
 		HttpClientAsThread client;
@@ -124,31 +127,34 @@ public class JobManager /* implements Runnable */{
 
 			@Override
 			public void onSendRequestToAgent(JobStatus status) {
-				// TODO Auto-generated method stub
-				System.out.println(job.getJobId() + " sent to agent - Job Id : "+job.getJobId());
-				try {
-					jobTable.update(job.getJobId(), status);
-				} catch (SharedJobTableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				logger.info("["+Thread.currentThread().getId()+"]"+job.getSeed().getSeed() + " sent to agent - Job Id : "+job.getJobId());
+				update(job.getJobId(),status);
 			}
 
 			@Override
 			public void onGetResponseFromAgent(JobStatus status) {
-				// TODO Auto-generated method stub
-				System.out.println("Get response about " + job.getJobId()
+				logger.info("["+Thread.currentThread().getId()+"]"+"Get response about " + job.getJobId()
 						+ " from agent");
-				try {
-					jobTable.update(job.getJobId(), status);
-				} catch (SharedJobTableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				update(job.getJobId(),status);
+			}
+
+			@Override
+			public void onRequestTimeout(JobStatus status) {
+				logger.info("["+Thread.currentThread().getId()+"]"+"Request Time Out : Job ID - "+job.getJobId());
+				update(job.getJobId(),status);
 			}
 		});
 
 		new Thread(client).start();
+	}
+	
+	public void update(String jobId, JobStatus status){
+		try {
+			jobTable.update(jobId, status);
+		} catch (SharedJobTableException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

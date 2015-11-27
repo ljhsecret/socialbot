@@ -90,8 +90,8 @@ public class JobEntity {
 		HashMap<String, String> paramMap = new HashMap<String, String>();
 		
 		paramMap.put("jobId", ""+jobId);
-		paramMap.put("channelId", channelId);
-		paramMap.put("siteId", siteId);
+		paramMap.put("channelId", "10");
+		paramMap.put("siteId", "1010");
 		paramMap.put("seed", seed);
 		//코드화
 		paramMap.put("cursor", "");

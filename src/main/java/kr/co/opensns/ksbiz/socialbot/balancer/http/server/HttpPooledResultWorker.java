@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
 import kr.co.opensns.ksbiz.socialbot.balancer.job.JobManager;
+import kr.co.opensns.ksbiz.socialbot.balancer.job.JobStatus;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -48,30 +49,31 @@ public class HttpPooledResultWorker extends HttpPooledWorker {
 
 	public void run(HashMap<String, String> query_map) {
 		logger.info((id++) + " Result worker running..");
-
+		OutputStream out = null;
 		if (exchange == null)
 			return;
-
-		query_map.get("jobId");
-		query_map.get("Content-Type");
-		query_map.get("elapsedTime");
-		query_map.get("crawledCount");
-
-		switch (query_map.get("StatusCode")) {
-		case "01":
-			
-			break;
-		
-		case "02":
-
-			break;
-
-		default:
-			break;
-		}
-		OutputStream out = null;
-
 		try {
+			String jobId = query_map.get("jobId");
+			String contentType = query_map.get("Content-Type");
+			String elapsedTime = query_map.get("elapsedTime");
+			String crawledCount = query_map.get("crawledCount");
+
+			switch (query_map.get("StatusCode")) {
+			case "01":
+				jobManager.update(jobId, JobStatus.DONE);
+				break;
+
+			case "02":
+				
+				break;
+				sxcva
+				
+				
+				
+			default:
+				break;
+			}
+
 			exchange.sendResponseHeaders(200, 0);
 			out = exchange.getResponseBody();
 

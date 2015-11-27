@@ -1,8 +1,6 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 /**
  * 클래스 설명
@@ -23,7 +21,6 @@ public class SeedLoader<T extends Loadable> {
 
 	Class<T> cls;
 
-	@SuppressWarnings("unchecked")
 	public SeedLoader(Class<T> cls) {
 		this.cls = cls;
 		// ParameterizedType genericSuperClass =

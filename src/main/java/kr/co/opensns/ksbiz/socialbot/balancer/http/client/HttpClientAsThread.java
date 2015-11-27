@@ -3,8 +3,10 @@ package kr.co.opensns.ksbiz.socialbot.balancer.http.client;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.rowset.spi.SyncResolver;
@@ -14,6 +16,8 @@ import kr.co.opensns.ksbiz.socialbot.balancer.job.JobStatus;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 
@@ -73,7 +77,7 @@ public class HttpClientAsThread implements Runnable {
 	 */
 	public PostMethod make_post_method(String uri, Map<String, String> params) {
 		PostMethod method = new PostMethod(uri);
-
+		
 		if (params == null)
 			return null;
 
@@ -93,6 +97,46 @@ public class HttpClientAsThread implements Runnable {
 
 			method.addParameter(key, value);
 		}
+
+		return method;
+	}
+	
+	public GetMethod make_get_method(String uri, Map<String, String> params) {
+		GetMethod method = new GetMethod(uri);
+		
+		if (params == null)
+			return null;
+
+		Iterator<String> key_iter = params.keySet().iterator();
+		List<NameValuePair> nvpList  = new ArrayList<NameValuePair>();
+//		NameValuePair[] nvpArray = new NameValuePair()[10];
+		StringBuilder queryString = new StringBuilder();
+		queryString.append("?");
+		while (key_iter.hasNext()) {
+			NameValuePair nvp = new NameValuePair();
+			
+			String key = key_iter.next();
+
+			if (key == null)
+				continue;
+
+			String value = params.get(key);
+
+			if (value == null)
+				throw new NullPointerException("Value is null ... (KEY : "
+						+ key + ")");
+
+			nvp.setName(key);
+			nvp.setValue(value);
+			
+			queryString.append(key+"="+value);
+			if(key_iter.hasNext())
+				queryString.append("&");
+			nvpList.add(nvp);
+		}
+		
+		
+		method.setQueryString(queryString.toString());
 
 		return method;
 	}
@@ -130,7 +174,53 @@ public class HttpClientAsThread implements Runnable {
 				sb.append(line).append('\n');
 
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			if(e instanceof java.net.ConnectException){
+				listener.onRequestTimeout(JobStatus.ERROR);
+			}
+			return null;
+		} finally {
+			method.releaseConnection();
+
+			try {
+				if (br != null)
+					br.close();
+			} catch (Exception fe) {
+				fe.printStackTrace();
+			}
+		}
+
+		return sb.toString();
+	}
+	
+	public String send_and_get_response(HttpClient client, GetMethod method) {
+		BufferedReader br = null;
+		StringBuffer sb = new StringBuffer();
+
+		try {
+			int returnCode = client.executeMethod(method);
+			// listener.onSendRequestToAgent(job);
+
+			if (returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
+				System.err
+						.println("The Post method is not implemented by this URI");
+				method.getResponseBodyAsString();
+
+				throw new Exception(returnCode + "");
+			}
+
+			br = new BufferedReader(new InputStreamReader(
+					method.getResponseBodyAsStream()));
+			String line = null;
+
+			while ((line = br.readLine()) != null)
+				sb.append(line).append('\n');
+
+		} catch (Exception e) {
+//			e.printStackTrace();
+			if(e instanceof java.net.ConnectException){
+				listener.onRequestTimeout(JobStatus.ERROR);
+			}
 			return null;
 		} finally {
 			method.releaseConnection();
@@ -165,8 +255,9 @@ public class HttpClientAsThread implements Runnable {
 			// ---------------------------------------------------------
 			// Make post method ...
 			// ---------------------------------------------------------
-			PostMethod method = make_post_method(uri, params);
-
+//			PostMethod method = make_post_method(uri, params);
+			GetMethod method = make_get_method(uri, params);
+			
 			if (method == null)
 				return;
 
@@ -174,13 +265,16 @@ public class HttpClientAsThread implements Runnable {
 			// wait for response ...
 			// -------------------------------------------------------
 			String result = send_and_get_response(httpClient, method);
-			listener.onGetResponseFromAgent(JobStatus.WORKING);
+			
 			if (result == null)
 				throw new Exception("response error");
+			
+			listener.onGetResponseFromAgent(JobStatus.DONE);
+			
 			System.out.println(result);
 		} catch (Exception e) {
 			logger.info(e.getMessage());
-			listener.onGetResponseFromAgent(JobStatus.ERROR);
+//			listener.onGetResponseFromAgent(JobStatus.ERROR);
 		}
 	}
 }

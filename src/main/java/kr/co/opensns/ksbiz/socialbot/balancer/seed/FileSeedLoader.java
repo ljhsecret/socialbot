@@ -55,11 +55,14 @@ public class FileSeedLoader extends Loadable{
 				q.put(seed);
 				logger.info("Seed : "+seed.seed);
 			}
+			br.close();
 		} catch (FileNotFoundException fnfe) {
 			fnfe.printStackTrace();
 		} catch (IOException ioe) {
 			// TODO Auto-generated catch block
 			ioe.printStackTrace();
+		} finally{
+		
 		}
 		
 		return q;

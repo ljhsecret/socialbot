@@ -76,7 +76,7 @@ public class PriorityTable {
 						+ " into map");
 			}
 
-			AgentInfo agent = map.get(ip);
+//			AgentInfo agent = map.get(ip);
 
 			map.remove(ip);
 

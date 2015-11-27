@@ -20,12 +20,11 @@ public class ConnectionFactory {
 	public static final String NAME_SPACE_MANAGE = "myBatisManageList.";
 	public static SqlSessionFactory sqlMapper = MyBatisManager.getInstance();
 
-	public List<Map<String, Object>> ConnectionTest(int top_seq) {
+	public List<Map<String, Object>> selectSeedInfo() {
 		SqlSession session = sqlMapper.openSession();
 		List<Map<String, Object>> hmap = null;
 		try {
-			hmap = session.selectList(NAME_SPACE_SELECT + "selectTestData",
-					top_seq);
+			hmap = session.selectList(NAME_SPACE_SELECT + "selectSeedInfo");
 		} finally {
 			session.commit();
 			session.close();

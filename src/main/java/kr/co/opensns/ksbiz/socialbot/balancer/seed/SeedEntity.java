@@ -1,6 +1,5 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,6 +26,7 @@ public class SeedEntity {
 	long crawlCount;
 	long crawledDocCount;
 	long lastCrawlDate;
+	long firstCrawlDate;
 	String cursor;
 
 	public String getChannel() {
@@ -94,8 +94,11 @@ public class SeedEntity {
 	}
 
 	public void update(Map<String, String> fields) {
-		for (Iterator itr = fields.keySet().iterator(); itr.hasNext();) {
+		for (Iterator<String> itr = fields.keySet().iterator(); itr.hasNext();) {
 			String fieldName = (String) itr.next();
+			
+			this.crawlCount++;
+			
 			switch (fieldName.toLowerCase()) {
 			case "cursor":
 				this.cursor = fields.get(fieldName);
@@ -111,9 +114,13 @@ public class SeedEntity {
 			}
 		}
 	}
+	
+	private double getAvrUpdateTime(){
+		return lastCrawlDate-firstCrawlDate/crawlCount;
+	}
 
 	public double getPriority() {
-
+		getAvrUpdateTime();
 		return 0;
 	}
 }
