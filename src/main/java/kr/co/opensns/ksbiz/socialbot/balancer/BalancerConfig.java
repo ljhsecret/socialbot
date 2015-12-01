@@ -88,11 +88,11 @@ public class BalancerConfig {
 			}
 
 		} catch (JDOMException jdome) {
-			System.out.println("ERROR Fail to init Config");
+			System.out.println("ERROR Fail to init Config : "+jdome.getMessage());
 		} catch (FileNotFoundException fnfe) {
 			System.out.println("ERROR Fail to init Config : FileNotFoundException - filePath:"+configFilePath);
 		} catch (IOException e) {
-			System.out.println("ERROR Fail to init Config");
+			System.out.println("ERROR Fail to init Config : "+e.getMessage());
 		}
 	}
 	

@@ -157,4 +157,14 @@ public class JobManager /* implements Runnable */{
 		
 	}
 
+	public String getAgent(String jobId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getSeed(String jobId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -52,11 +52,12 @@ public class SeedManager {
 	}
 
 	private SeedManager() {
-		logger = Logger.getLogger(this.getClass());
-		queueMap = new HashMap<String, SeedQueue>();
+		init();
 	}
 
 	private void init() {
+		logger = Logger.getLogger(this.getClass());
+		queueMap = new HashMap<String, SeedQueue>();
 		weightPerSite = new HashMap<String, Double>();
 		jobCountPerSite = new HashMap<String, Integer>();
 	}
@@ -101,8 +102,7 @@ public class SeedManager {
 			return;
 		}
 		seedConfig = conf.getSeedConfig();
-
-		init();
+		
 		initWeightValue();
 		try {
 			Load();
