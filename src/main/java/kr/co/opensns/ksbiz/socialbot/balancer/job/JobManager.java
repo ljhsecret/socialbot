@@ -157,14 +157,24 @@ public class JobManager /* implements Runnable */{
 		
 	}
 
-	public String getAgent(String jobId) {
-		// TODO Auto-generated method stub
-		return null;
+	public AgentInfo getAgent(String jobId) {
+		AgentInfo agent = null;
+		try {
+			agent = jobTable.get(jobId).getAgent();
+		} catch (SharedJobTableException e) {
+			e.printStackTrace();
+		}
+		return agent;
 	}
 
-	public String getSeed(String jobId) {
-		// TODO Auto-generated method stub
-		return null;
+	public SeedEntity getSeed(String jobId) {
+		SeedEntity seed = null;
+		try {
+			seed = jobTable.get(jobId).getSeed();
+		} catch (SharedJobTableException e) {
+			e.printStackTrace();
+		}
+		return seed;
 	}
 
 }

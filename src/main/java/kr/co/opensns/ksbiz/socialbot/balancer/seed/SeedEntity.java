@@ -19,7 +19,6 @@ import java.util.Map;
  */
 
 public class SeedEntity {
-	String channel;
 	String site;
 	String seed;
 	String type;
@@ -29,9 +28,6 @@ public class SeedEntity {
 	long firstCrawlDate;
 	String cursor;
 
-	public String getChannel() {
-		return channel;
-	}
 
 	public String getSite() {
 		return site;
@@ -59,10 +55,6 @@ public class SeedEntity {
 
 	public String getCursor() {
 		return cursor;
-	}
-
-	public void setChannel(String channel) {
-		this.channel = channel;
 	}
 
 	public void setSite(String site) {

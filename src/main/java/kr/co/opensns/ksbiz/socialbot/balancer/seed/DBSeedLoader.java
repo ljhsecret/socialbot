@@ -29,7 +29,6 @@ public class DBSeedLoader extends Loadable {
 	private SeedEntity MapToSeedEntity(Map<String, Object> map) {
 		SeedEntity seed = new SeedEntity();
 
-		seed.setChannel(map.get("channel").toString());
 		seed.setSite(map.get("SITE_ID").toString());
 		seed.setSeed(map.get("SEED_ID").toString());
 		seed.setCursor(map.get("CURSOR").toString());

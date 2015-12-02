@@ -108,8 +108,6 @@ public class HttpClientAsThread implements Runnable {
 			return null;
 
 		Iterator<String> key_iter = params.keySet().iterator();
-		List<NameValuePair> nvpList  = new ArrayList<NameValuePair>();
-//		NameValuePair[] nvpArray = new NameValuePair()[10];
 		StringBuilder queryString = new StringBuilder();
 		queryString.append("?");
 		while (key_iter.hasNext()) {
@@ -132,7 +130,6 @@ public class HttpClientAsThread implements Runnable {
 			queryString.append(key+"="+value);
 			if(key_iter.hasNext())
 				queryString.append("&");
-			nvpList.add(nvp);
 		}
 		
 		
@@ -156,7 +153,6 @@ public class HttpClientAsThread implements Runnable {
 
 		try {
 			int returnCode = client.executeMethod(method);
-			// listener.onSendRequestToAgent(job);
 
 			if (returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
 				System.err
@@ -174,7 +170,6 @@ public class HttpClientAsThread implements Runnable {
 				sb.append(line).append('\n');
 
 		} catch (Exception e) {
-//			e.printStackTrace();
 			if(e instanceof java.net.ConnectException){
 				listener.onRequestTimeout(JobStatus.ERROR);
 			}
@@ -204,9 +199,8 @@ public class HttpClientAsThread implements Runnable {
 			if (returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
 				System.err
 						.println("The Post method is not implemented by this URI");
-				method.getResponseBodyAsString();
 
-				throw new Exception(returnCode + "");
+				throw new Exception(returnCode + method.getResponseBodyAsString());
 			}
 
 			br = new BufferedReader(new InputStreamReader(

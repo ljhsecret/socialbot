@@ -44,7 +44,6 @@ public class FileSeedLoader extends Loadable{
 				
 				if(csv.length < 6) continue;
 				
-				seed.setChannel(csv[0]);
 				seed.setSite(csv[1]);
 				seed.setSeed(csv[2]);
 				seed.setCursor(csv[3]);

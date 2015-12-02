@@ -19,6 +19,7 @@ public class AgentInfo implements Comparable<AgentInfo> {
 	private long jobCount;
 	private String ip;
 	private String port;
+	private static int MAX_JOB_COUNT = 5;
 
 	private enum State {
 		ALIVE, DEAD
@@ -50,6 +51,8 @@ public class AgentInfo implements Comparable<AgentInfo> {
 	}
 
 	public double getPriority() {
+		if(jobCount == MAX_JOB_COUNT)
+			return Double.MAX_VALUE;
 		return jobCount * 100000000 + avrJobProcessingTime;
 	}
 
@@ -91,6 +94,10 @@ public class AgentInfo implements Comparable<AgentInfo> {
 
 	public void setLastWorkingTime(long lastWorkingTime) {
 		this.lastWorkingTime = lastWorkingTime;
+	}
+	
+	public void update(){
+		
 	}
 	
 	public String toCSV(){

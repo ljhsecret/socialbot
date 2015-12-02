@@ -31,7 +31,6 @@ public class JobEntity {
 	private AgentInfo workingAgent;
 	
 	private long jobId;
-	private String channelId;
 	private String siteId;
 	private String seed;
 	private String cursor;
@@ -67,7 +66,6 @@ public class JobEntity {
 	
 	public void setSeed(SeedEntity seed){
 		this.targetSeed = seed;
-		this.channelId = seed.getChannel();
 		this.siteId = seed.getSite();
 		this.seed = seed.getSeed();
 		this.cursor = seed.getCursor();
