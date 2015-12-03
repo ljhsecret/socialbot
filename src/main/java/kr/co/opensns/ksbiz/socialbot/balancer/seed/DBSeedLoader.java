@@ -1,5 +1,6 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,26 +17,52 @@ public class DBSeedLoader extends Loadable {
 	@Override
 	SeedQueue Load(String path, String type) {
 		SeedQueue queue = new SeedQueue(type);
-		
-		List<Map<String, Object>> results = cf.selectSeedInfo();
 
+		List<Map<String, Object>> results = cf.selectSeedInfo();
+		// System.out.println(results);
 		for (Map<String, Object> result : results) {
 			queue.put(MapToSeedEntity(result));
 		}
 
-		return null;
+		return queue;
 	}
 
 	private SeedEntity MapToSeedEntity(Map<String, Object> map) {
 		SeedEntity seed = new SeedEntity();
 
-		seed.setSite(map.get("SITE_ID").toString());
-		seed.setSeed(map.get("SEED_ID").toString());
-		seed.setCursor(map.get("CURSOR").toString());
-		seed.setCrawlCount(Integer.parseInt(map.get("VISIT_CNT").toString()));
-		seed.setCrawledDocCount(Integer.parseInt(map.get("DOC_CNT").toString()));
-		seed.setLastCrawlDate(Integer.parseInt(map.get("LAST_VISIT_DATE").toString()));
+		for (Iterator<String> itr = map.keySet().iterator(); itr.hasNext();) {
+			String key = itr.next();
+			Object value = map.get(key);
+			if (value == null)
+				continue;
 
+			switch (key) {
+			case "SITE_ID":
+				seed.setSite(value.toString());
+				break;
+			case "SEED_ID":
+				seed.setSeed(value.toString());
+				break;
+			case "VISIT_CNT":
+				seed.setCrawlCount(Integer.parseInt(value.toString()));
+				break;
+			case "DOC_CNT":
+				seed.setCrawledDocCount(Integer.parseInt(value.toString()));
+				break;
+			case "LAST_VISIT_DATE":
+				seed.setLastCrawlDate(Long.parseLong(value.toString()));
+				break;
+			case "FIRST_VISIT_DATE":
+				seed.setFirstCrawlDate(Long.parseLong(value.toString()));
+				break;
+			case "CURSOR":
+				seed.setCursor(value.toString());
+				break;
+			default:
+				break;
+			}
+		}
+		
 		return seed;
 	}
 

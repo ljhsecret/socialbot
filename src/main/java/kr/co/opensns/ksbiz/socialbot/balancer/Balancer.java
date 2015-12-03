@@ -71,18 +71,16 @@ public class Balancer implements Runnable {
 		Balancer balancer = new Balancer(conf);
 
 		// --------------------------------------------------------------
-		// Start balancer ...
-		// --------------------------------------------------------------
-		balancer.start();
-//		ConnectionFactory cf = new ConnectionFactory();
-//		System.out.println(cf.ConnectionTest(0));
-		
-		System.out.println("Balancer Started ...");
-
-		// --------------------------------------------------------------
 		// Start Server ...
 		// --------------------------------------------------------------
 		new HttpPooledServer(8808).start();
 		System.out.println("Server Started ...");
+		
+		// --------------------------------------------------------------
+		// Start balancer ...
+		// --------------------------------------------------------------
+		balancer.start();
+		System.out.println("Balancer Started ...");
+
 	}
 }

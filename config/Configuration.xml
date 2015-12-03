@@ -12,7 +12,7 @@
 		<seed>
 			<channel>sns</channel>
 			<site>instagram</site>
-			<repository>local</repository>
+			<repository>db</repository>
 			<path>config/Seeds2.csv</path>
 			<weight>3</weight>
 			<type>id</type>
@@ -35,6 +35,12 @@
 			<port>8080</port>
 		</agent>
 		<!-- 
+		<agent>
+			<ip>localhost</ip>
+			<port>8080</port>
+		</agent>
+		
+		
 		<agent>
 			<ip>11.11.12.109</ip>
 			<port>7575</port>

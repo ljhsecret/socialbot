@@ -27,7 +27,15 @@ public class SeedEntity {
 	long lastCrawlDate;
 	long firstCrawlDate;
 	String cursor;
+	
+	
+	public long getFirstCrawlDate() {
+		return firstCrawlDate;
+	}
 
+	public void setFirstCrawlDate(long firstCrawlDate) {
+		this.firstCrawlDate = firstCrawlDate;
+	}
 
 	public String getSite() {
 		return site;
@@ -88,9 +96,9 @@ public class SeedEntity {
 	public void update(Map<String, String> fields) {
 		for (Iterator<String> itr = fields.keySet().iterator(); itr.hasNext();) {
 			String fieldName = (String) itr.next();
-			
+
 			this.crawlCount++;
-			
+
 			switch (fieldName.toLowerCase()) {
 			case "cursor":
 				this.cursor = fields.get(fieldName);
@@ -106,9 +114,13 @@ public class SeedEntity {
 			}
 		}
 	}
-	
-	private double getAvrUpdateTime(){
-		return lastCrawlDate-firstCrawlDate/crawlCount;
+
+	private double getAvrUpdateTime() {
+		try {
+			return lastCrawlDate - firstCrawlDate / crawlCount;
+		} catch (Exception e) {
+			return 0;
+		} 
 	}
 
 	public double getPriority() {

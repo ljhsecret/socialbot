@@ -24,11 +24,6 @@ public class MyBatisManager {
 	public static SqlSessionFactory getInstance(){
 		if(sqlMapper == null){
 			try{
-				System.out.println(new File(".").getCanonicalPath());
-				System.out.println(System.getProperty("user.dir"));
-				if(new File(System.getProperty("user.dir")+"\\Configuration.xml").exists())
-					System.out.println("exist");
-					
 				String path="kr/co/opensns/ksbiz/socialbot/balancer/db/mybatis/Configuration.xml";
 				
 				Reader reader = Resources.getResourceAsReader(path);

@@ -89,7 +89,7 @@ public class AgentManager {
 				agent.setJobCount(JobCount.equals("null")?0:Long.parseLong(JobCount));
 				agent.setLastWorkingTime(LastWorkingTime.equals("null")?0:Long.parseLong(LastWorkingTime));
 			}
-
+			logger.info("agent Load done : " + agent.getIp());
 			agentQueue.put(agent);
 		}
 		
@@ -123,7 +123,6 @@ public class AgentManager {
 						: csv[4]);
 
 				tmp.put(csv[0], fields);
-				logger.info("agent Load done : " + csv[0]);
 			}
 
 			br.close();

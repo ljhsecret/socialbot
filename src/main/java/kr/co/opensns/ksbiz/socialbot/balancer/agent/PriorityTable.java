@@ -48,6 +48,7 @@ public class PriorityTable {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public AgentInfo take() {
 		synchronized (PriorityTable.class) {
+			sort();
 			Set<Entry<String, AgentInfo>> eSet = map.entrySet();
 			Iterator itr = eSet.iterator();
 			if (!itr.hasNext())

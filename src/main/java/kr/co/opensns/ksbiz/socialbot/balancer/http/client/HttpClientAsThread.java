@@ -54,9 +54,7 @@ public class HttpClientAsThread implements Runnable {
 	}
 
 	public void setJob(JobEntity job) {
-		synchronized (HttpClientAsThread.class) {
-			this.job = job;
-		}
+		this.job = job;
 	}
 
 	public HttpClient init_send_request() {
@@ -77,7 +75,7 @@ public class HttpClientAsThread implements Runnable {
 	 */
 	public PostMethod make_post_method(String uri, Map<String, String> params) {
 		PostMethod method = new PostMethod(uri);
-		
+
 		if (params == null)
 			return null;
 
@@ -100,10 +98,10 @@ public class HttpClientAsThread implements Runnable {
 
 		return method;
 	}
-	
+
 	public GetMethod make_get_method(String uri, Map<String, String> params) {
 		GetMethod method = new GetMethod(uri);
-		
+
 		if (params == null)
 			return null;
 
@@ -112,7 +110,7 @@ public class HttpClientAsThread implements Runnable {
 		queryString.append("?");
 		while (key_iter.hasNext()) {
 			NameValuePair nvp = new NameValuePair();
-			
+
 			String key = key_iter.next();
 
 			if (key == null)
@@ -126,13 +124,12 @@ public class HttpClientAsThread implements Runnable {
 
 			nvp.setName(key);
 			nvp.setValue(value);
-			
-			queryString.append(key+"="+value);
-			if(key_iter.hasNext())
+
+			queryString.append(key + "=" + value);
+			if (key_iter.hasNext())
 				queryString.append("&");
 		}
-		
-		
+
 		method.setQueryString(queryString.toString());
 
 		return method;
@@ -170,7 +167,7 @@ public class HttpClientAsThread implements Runnable {
 				sb.append(line).append('\n');
 
 		} catch (Exception e) {
-			if(e instanceof java.net.ConnectException){
+			if (e instanceof java.net.ConnectException) {
 				listener.onRequestTimeout(JobStatus.ERROR);
 			}
 			return null;
@@ -187,7 +184,7 @@ public class HttpClientAsThread implements Runnable {
 
 		return sb.toString();
 	}
-	
+
 	public String send_and_get_response(HttpClient client, GetMethod method) {
 		BufferedReader br = null;
 		StringBuffer sb = new StringBuffer();
@@ -200,7 +197,8 @@ public class HttpClientAsThread implements Runnable {
 				System.err
 						.println("The Post method is not implemented by this URI");
 
-				throw new Exception(returnCode + method.getResponseBodyAsString());
+				throw new Exception(returnCode
+						+ method.getResponseBodyAsString());
 			}
 
 			br = new BufferedReader(new InputStreamReader(
@@ -211,8 +209,8 @@ public class HttpClientAsThread implements Runnable {
 				sb.append(line).append('\n');
 
 		} catch (Exception e) {
-//			e.printStackTrace();
-			if(e instanceof java.net.ConnectException){
+			// e.printStackTrace();
+			if (e instanceof java.net.ConnectException) {
 				listener.onRequestTimeout(JobStatus.ERROR);
 			}
 			return null;
@@ -244,14 +242,14 @@ public class HttpClientAsThread implements Runnable {
 			if (httpClient == null)
 				return;
 
-			HashMap<String, String> params = job.makeReqestParamMap();
+			HashMap<String, String> params = job.toMap();
 
 			// ---------------------------------------------------------
 			// Make post method ...
 			// ---------------------------------------------------------
-//			PostMethod method = make_post_method(uri, params);
+			// PostMethod method = make_post_method(uri, params);
 			GetMethod method = make_get_method(uri, params);
-			
+
 			if (method == null)
 				return;
 
@@ -259,16 +257,16 @@ public class HttpClientAsThread implements Runnable {
 			// wait for response ...
 			// -------------------------------------------------------
 			String result = send_and_get_response(httpClient, method);
-			
+
 			if (result == null)
 				throw new Exception("response error");
-			
+
 			listener.onGetResponseFromAgent(JobStatus.DONE);
-			
+
 			System.out.println(result);
 		} catch (Exception e) {
 			logger.info(e.getMessage());
-//			listener.onGetResponseFromAgent(JobStatus.ERROR);
+			// listener.onGetResponseFromAgent(JobStatus.ERROR);
 		}
 	}
 }

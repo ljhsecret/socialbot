@@ -17,12 +17,13 @@ import java.lang.reflect.InvocationTargetException;
  *
  */
 
-public class SeedLoader<T extends Loadable> {
+public class SeedLoader<L extends Loadable> {
 
-	Class<T> cls;
+	Class<L> cls;
 
-	public SeedLoader(Class<T> cls) {
+	public SeedLoader(Class<L> cls) {
 		this.cls = cls;
+		this.getClass();
 		// ParameterizedType genericSuperClass =
 		// (ParameterizedType)getClass().getGenericSuperclass();
 		// Type type = genericSuperClass.getActualTypeArguments()[0];
@@ -39,7 +40,7 @@ public class SeedLoader<T extends Loadable> {
 			IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException {
 		SeedQueue q = null;
-		T loader = cls.getConstructor().newInstance();
+		L loader = cls.getConstructor().newInstance();
 		q = loader.Load(path, type);
 
 		return q;

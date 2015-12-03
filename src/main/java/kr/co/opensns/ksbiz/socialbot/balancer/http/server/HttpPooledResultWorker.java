@@ -54,23 +54,19 @@ public class HttpPooledResultWorker extends HttpPooledWorker {
 			return;
 		try {
 			String jobId = query_map.get("jobId");
-			String contentType = query_map.get("Content-Type");
-			String elapsedTime = query_map.get("elapsedTime");
-			String crawledCount = query_map.get("crawledCount");
 
 			switch (query_map.get("StatusCode")) {
 			case "01":
 				jobManager.update(jobId, JobStatus.DONE);
 				seedManager.update(jobManager.getSeed(jobId).getSeed(), query_map);
 				agentManager.update(jobManager.getAgent(jobId).getIp(), query_map);
-				
 				break;
 
 			case "02":
-				
+				jobManager.update(jobId, JobStatus.ERROR);
+				seedManager.update(jobManager.getSeed(jobId).getSeed(), query_map);
+				agentManager.update(jobManager.getAgent(jobId).getIp(), query_map);
 				break;
-				
-				
 				
 			default:
 				break;

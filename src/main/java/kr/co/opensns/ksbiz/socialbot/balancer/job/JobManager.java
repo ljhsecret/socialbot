@@ -127,7 +127,7 @@ public class JobManager /* implements Runnable */{
 
 			@Override
 			public void onSendRequestToAgent(JobStatus status) {
-				logger.info("["+Thread.currentThread().getId()+"]"+job.getSeed().getSeed() + " sent to agent - Job Id : "+job.getJobId());
+				logger.info("["+Thread.currentThread().getId()+"]"+job.getSeed().getSeed() + " sent to agent("+ job.getAgent().getIp() +")- Job Id : "+job.getJobId());
 				update(job.getJobId(),status);
 			}
 

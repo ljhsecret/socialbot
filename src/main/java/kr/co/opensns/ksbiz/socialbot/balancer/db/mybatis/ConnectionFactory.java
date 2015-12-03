@@ -31,6 +31,7 @@ public class ConnectionFactory {
 		}
 		return hmap;
 	}
+	
 	/*
 	public Map<String, Object> selectTopicData(int top_seq) {
 		SqlSession session = sqlMapper.openSession();

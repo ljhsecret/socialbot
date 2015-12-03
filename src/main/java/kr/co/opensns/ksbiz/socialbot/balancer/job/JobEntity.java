@@ -84,7 +84,7 @@ public class JobEntity {
 		return this.workingAgent;
 	}
 	
-	public HashMap<String, String> makeReqestParamMap(){
+	public HashMap<String, String> toMap(){
 		HashMap<String, String> paramMap = new HashMap<String, String>();
 		
 		paramMap.put("jobId", ""+jobId);

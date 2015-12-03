@@ -4,6 +4,10 @@
 <configuration>
 	<properties resource="kr/co/opensns/ksbiz/socialbot/balancer/db/mybatis/properties" />
 	
+	<settings>
+		<setting name="callSettersOnNulls" value="true"/>
+	</settings>
+	
 	<typeAliases>
 		<typeAlias alias="hMap" type="java.util.HashMap" />
 		<!-- <typeAlias alias="AnalWorkManager" type="kr.co.opensns.bo.biga.analyzer.AnalWorkManager"/> -->
