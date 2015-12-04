@@ -1,0 +1,4 @@
+driver=com.mysql.jdbc.Driver
+url=jdbc:mysql://1.234.16.41:3306/socialbot
+username=socialbot
+password=opensns#123

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="myBatisManageList">
+    <insert id="insertSeedInfo" parameterType="hMap">
+        INSERT INTO SEED_INFO
+        (
+        	SEED_ID,
+        	SITE_ID,
+        	SEED_TYPE,
+        	CRL_TYPE,
+        	
+        )
+        VALUES
+        (
+			#{seedId},
+			#{siteType},
+			#{seedType},
+			#{crawlType},
+			#{active}
+        )
+    </insert>
+
+    
+    <update id="updateAverageUpdateTime" parameterType="hMap">
+    	UPDATE SEED_INFO
+    	SET AVG_UPD_TIME=#{jobStatus},
+    		LAST_VISIT_DATE=#{lastVisitDate},
+    		FRIENDS_CNT=#{friendsCnt},
+    		VISIT_CNT=#{visitCnt},
+    		DOC_CND=#={docCnt}
+    	WHERE SEED_ID=#{seedId}
+    	AND SITE_ID=#{siteId}
+    </update>
+    
+    <update id="updateLastVisitDate" parameterType="hMap">
+    	UPDATE SEED_INFO
+    	SET AVG_UPD_TIME=#{jobStatus},
+    		LAST_VISIT_DATE=#{lastVisitDate},
+    		FRIENDS_CNT=#{friendsCnt},
+    		VISIT_CNT=#{visitCnt},
+    		DOC_CND=#={docCnt}
+    	WHERE SEED_ID=#{seedId}
+    	AND SITE_ID=#{siteId}
+    </update>
+    
+    <update id="updateVisitCount" parameterType="hMap">
+    	UPDATE SEED_INFO
+    	SET AVG_UPD_TIME=#{jobStatus},
+    		LAST_VISIT_DATE=#{lastVisitDate},
+    		FRIENDS_CNT=#{friendsCnt},
+    		VISIT_CNT=#{visitCnt},
+    		DOC_CND=#={docCnt}
+    	WHERE SEED_ID=#{seedId}
+    	AND SITE_ID=#{siteId}
+    </update>
+    
+    <update id="updateDocCount" parameterType="hMap">
+    	UPDATE SEED_INFO
+    	SET	DOC_CND=#={docCnt}
+    	WHERE SEED_ID=#{seedId}
+    	AND SITE_ID=#{siteId}
+    </update>
+    
+    <update id="updateLanguage" parameterType="hMap">
+    	UPDATE SEED_INFO
+    	SET LANGUAGE=#{language}
+    	WHERE SEED_ID=#{seedId}
+    	AND SITE_ID=#{siteId}
+    </update>
+    
+    <update id="updateLocation" parameterType="hMap">
+    	UPDATE SEED_INFO
+    	SET LOCATION=#{location}
+    	WHERE SEED_ID=#{seedId}
+    	AND SITE_ID=#{siteId}
+    </update>
+    
+    <update id="updateTimeZone" parameterType="hMap">
+    	UPDATE SEED_INFO
+    	SET TIMEZONE=#{timeZone}
+    	WHERE SEED_ID=#{seedId}
+    	AND SITE_ID=#{siteId}
+    </update>
+    
+    <!-- 
+    <update id="updateEndStatus" parameterType="AnalWorkManager">
+    	UPDATE ANALS_WORK_HIT_INFO
+    	SET ANALS_WORK_STTUS_CODE=#{jobStatus},
+    		ANALS_ENDDE_HOUR=#{analEndDate},
+    		ERROR_CN=#{errorMsg}
+    	WHERE TPIC_SN=#{topicSequnceNumber}
+    	AND ANALS_BGNDE_HOUR=#{StringAnalBeginDate}
+    </update>
+     -->
+    
+</mapper>
