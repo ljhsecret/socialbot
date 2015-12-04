@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.SharedJobTableException;
 
 public class SharedJobTable {
-	private static final short JOB_TABLE_SIZE_MAX = 20;
+	private static final short JOB_TABLE_SIZE_MAX = 5;
 
 	private static HashMap<String, JobEntity> SharedJobTable;
 	private static SharedJobTable instance;

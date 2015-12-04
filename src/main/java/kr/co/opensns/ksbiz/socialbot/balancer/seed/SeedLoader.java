@@ -23,7 +23,7 @@ public class SeedLoader<L extends Loadable> {
 
 	public SeedLoader(Class<L> cls) {
 		this.cls = cls;
-		this.getClass();
+		
 		// ParameterizedType genericSuperClass =
 		// (ParameterizedType)getClass().getGenericSuperclass();
 		// Type type = genericSuperClass.getActualTypeArguments()[0];
@@ -42,7 +42,7 @@ public class SeedLoader<L extends Loadable> {
 		SeedQueue q = null;
 		L loader = cls.getConstructor().newInstance();
 		q = loader.Load(path, type);
-
+		cls.getName();
 		return q;
 	}
 

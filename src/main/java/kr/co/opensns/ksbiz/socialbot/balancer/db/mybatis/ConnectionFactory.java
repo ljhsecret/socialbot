@@ -8,6 +8,8 @@
 
 package kr.co.opensns.ksbiz.socialbot.balancer.db.mybatis;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +32,40 @@ public class ConnectionFactory {
 			session.close();
 		}
 		return hmap;
+	}
+	
+	public void insertSeedInfo(HashMap<String,String> seed) {
+		SqlSession session = sqlMapper.openSession();
+		
+		for(Iterator iter = seed.keySet().iterator();iter.hasNext();){
+			String key = iter.next().toString();
+			
+			switch(key){
+				
+			}
+		}
+		
+		try {
+			session.insert(NAME_SPACE_MANAGE + "insertAnalHistory", seed);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			session.commit();
+			session.close();
+		}
+	}
+
+	public void updateAnalStatus(HashMap<String,String> seed) {
+		SqlSession session = sqlMapper.openSession();
+
+		try {
+			session.update(NAME_SPACE_MANAGE + "updateAnalStatus", seed);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			session.commit();
+			session.close();
+		}
 	}
 	
 	/*
@@ -72,31 +108,7 @@ public class ConnectionFactory {
 		return categorySN;
 	}
 
-	public void insertAnalHistory(AnalWorkManager tpic) {
-		SqlSession session = sqlMapper.openSession();
-
-		try {
-			session.insert(NAME_SPACE_MANAGE + "insertAnalHistory", tpic);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		} finally {
-			session.commit();
-			session.close();
-		}
-	}
-
-	public void updateAnalStatus(AnalWorkManager tpic) {
-		SqlSession session = sqlMapper.openSession();
-
-		try {
-			session.update(NAME_SPACE_MANAGE + "updateAnalStatus", tpic);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		} finally {
-			session.commit();
-			session.close();
-		}
-	}
+	
 
 	public void updateEndStatus(AnalWorkManager tpic) {
 		SqlSession session = sqlMapper.openSession();
