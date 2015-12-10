@@ -42,7 +42,7 @@ public class HttpPooledResultWorker extends HttpPooledWorker {
 	public HttpPooledResultWorker(HttpExchange exchange) {
 		super(exchange);
 		agentManager = AgentManager.getInstance();
-		seedManager = SeedManager.getInstance();
+		seedManager = SeedManager.getinstance();
 		jobManager = JobManager.getInstance();
 		// jobManager.
 	}
@@ -57,13 +57,13 @@ public class HttpPooledResultWorker extends HttpPooledWorker {
 
 			switch (query_map.get("StatusCode")) {
 			case "01":
-				jobManager.update(jobId, query_map);
+				jobManager.update(jobId, JobStatus.DONE);
 				seedManager.update(jobManager.getSeed(jobId).getSeed(), query_map);
 				agentManager.update(jobManager.getAgent(jobId).getIp(), query_map);
 				break;
 
 			case "02":
-				jobManager.update(jobId, query_map);
+				jobManager.update(jobId, JobStatus.ERROR);
 				seedManager.update(jobManager.getSeed(jobId).getSeed(), query_map);
 				agentManager.update(jobManager.getAgent(jobId).getIp(), query_map);
 				break;

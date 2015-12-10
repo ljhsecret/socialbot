@@ -1,15 +1,13 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.job;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.SharedJobTableException;
 
 public class SharedJobTable {
-	private static final short JOB_TABLE_SIZE_MAX = 20;
+	private static final short JOB_TABLE_SIZE_MAX = 5;
 
 	private static HashMap<String, JobEntity> SharedJobTable;
 	private static SharedJobTable instance;
@@ -75,7 +73,7 @@ public class SharedJobTable {
 
 	public JobEntity get(String jobId) throws SharedJobTableException {
 		synchronized (SharedJobTable.class) {
-			if (!SharedJobTable.containsKey(jobId)) {
+			if (SharedJobTable.containsKey(jobId)) {
 				throw new SharedJobTableException("this job(" + jobId
 						+ ") is not exist in JobTable");
 			} else {
@@ -96,17 +94,4 @@ public class SharedJobTable {
 			return;
 		}
 	}
-
-	public Set<String> JobIdSet(){
-		return SharedJobTable.keySet();
-	}
-	
-	public int getSize(){
-		return SharedJobTable.size();
-	}
-	
-	public int getMaxSize(){
-		return this.JOB_TABLE_SIZE_MAX;
-	}
-	
 }

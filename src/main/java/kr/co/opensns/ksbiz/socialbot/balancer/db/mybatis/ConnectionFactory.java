@@ -33,11 +33,20 @@ public class ConnectionFactory {
 		}
 		return hmap;
 	}
-
-	public void insertSeedInfo(HashMap<String, String> seed) {
+	
+	public void insertSeedInfo(HashMap<String,String> seed) {
 		SqlSession session = sqlMapper.openSession();
+		
+		for(Iterator iter = seed.keySet().iterator();iter.hasNext();){
+			String key = iter.next().toString();
+			
+			switch(key){
+				
+			}
+		}
+		
 		try {
-			session.insert(NAME_SPACE_MANAGE + "insertSeedInfo", seed);
+			session.insert(NAME_SPACE_MANAGE + "insertAnalHistory", seed);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -46,10 +55,11 @@ public class ConnectionFactory {
 		}
 	}
 
-	public void updateSeedInfo(HashMap<String, String> seed) {
+	public void updateAnalStatus(HashMap<String,String> seed) {
 		SqlSession session = sqlMapper.openSession();
+
 		try {
-			session.update(NAME_SPACE_MANAGE + "updateSeedInfo", seed);
+			session.update(NAME_SPACE_MANAGE + "updateAnalStatus", seed);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -57,4 +67,61 @@ public class ConnectionFactory {
 			session.close();
 		}
 	}
+	
+	/*
+	public Map<String, Object> selectTopicData(int top_seq) {
+		SqlSession session = sqlMapper.openSession();
+		Map<String, Object> hmap = null;
+		try {
+			hmap = session.selectOne(NAME_SPACE_SELECT + "selectTopicData",
+					top_seq);
+		} finally {
+			session.commit();
+			session.close();
+		}
+		return hmap;
+	}
+
+	public int selectCategorybyTopic(int top_seq) {
+		SqlSession session = sqlMapper.openSession();
+		int categorySN;
+		try {
+			categorySN = session.selectOne(NAME_SPACE_SELECT
+					+ "selectCategorybyTopic", top_seq);
+		} finally {
+			session.commit();
+			session.close();
+		}
+		return categorySN;
+	}
+
+	public List<Object> selectRelTermInfo(int top_seq) {
+		SqlSession session = sqlMapper.openSession();
+		List<Object> categorySN;
+		try {
+			categorySN = session.selectList(NAME_SPACE_SELECT
+					+ "selectRelTermInfo", top_seq);
+		} finally {
+			session.commit();
+			session.close();
+		}
+		return categorySN;
+	}
+
+	
+
+	public void updateEndStatus(AnalWorkManager tpic) {
+		SqlSession session = sqlMapper.openSession();
+
+		try {
+			session.update(NAME_SPACE_MANAGE + "updateEndStatus", tpic);
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			session.commit();
+			session.close();
+			System.out.println("End State Update done");
+		}
+	}*/
 }

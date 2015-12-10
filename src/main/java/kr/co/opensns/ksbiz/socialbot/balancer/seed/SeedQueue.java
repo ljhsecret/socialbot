@@ -26,12 +26,12 @@ import org.apache.log4j.Logger;
 public class SeedQueue {
 
 	Logger logger;
-
+	
 	PriorityBlockingQueue<SeedEntity> queue = new PriorityBlockingQueue<>(
 			10000000, new SeedComprator());
-
+	
 	Map<String, SeedEntity> bufMap = new HashMap<String, SeedEntity>();
-
+	
 	String type;
 
 	public SeedQueue(String type) {
@@ -40,53 +40,34 @@ public class SeedQueue {
 	}
 
 	public void put(SeedEntity seed) {
-		synchronized (this) {
-			seed.setType(type);
-			queue.put(seed);
-		}
+		seed.setType(type);
+		queue.put(seed);
 	}
-
-	public void update(String seedAsString, Map<String, String> field)
-			throws BalancerException {
-		synchronized (this) {
-			if (bufMap.containsKey(seedAsString)) {
-				SeedEntity seed = bufMap.get(seedAsString);
-				seed.update(field);
-				queue.put(seed);
-			} else {
-				throw new BalancerException("not exist seed(" + seedAsString
-						+ ") in buffer map");
-			}
+	
+	public void update(String seedAsString,Map<String,String> field) throws BalancerException{
+		if(bufMap.containsKey(seedAsString)){
+			SeedEntity seed = bufMap.get(seedAsString);
+			seed.update(field);
+			queue.put(seed);
+		} else {
+			throw new BalancerException("not exist seed("+seedAsString+") in buffer map");
 		}
 	}
 
 	public SeedEntity take() {
-		synchronized (this) {
-
-			SeedEntity seed;
-			try {
-				seed = queue.take();
-				bufMap.put(seed.getSeed(), seed);
-				logger.info("QUEUE SIZE : " + queue.size());
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				seed = null;
-			}
-
-			return seed;
+		SeedEntity seed;
+		try {
+			seed = queue.take();
+			bufMap.put(seed.getSeed(), seed);
+			logger.info("QUEUE SIZE : "+queue.size());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			seed = null;
 		}
-	}
-	
-	public String getType(){
-		return type;
-	}
-	
-	public int getQueueSize(){
-		return queue.size();
-	}
-	
-	public int getBufSize(){
-		return bufMap.size();
+		
+		return seed; 
+		
+//		return queue.peek();
 	}
 }
