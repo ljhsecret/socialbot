@@ -124,7 +124,6 @@ public class SeedEntity {
 	}
 
 	public double getPriority() {
-		getAvrUpdateTime();
-		return 0;
+		return Double.parseDouble(seed);
 	}
 }

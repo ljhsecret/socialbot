@@ -13,6 +13,7 @@ import javax.sql.rowset.spi.SyncResolver;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.job.JobEntity;
 import kr.co.opensns.ksbiz.socialbot.balancer.job.JobStatus;
+import kr.co.opensns.ksbiz.socialbot.util.MapParser;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -57,9 +58,9 @@ public class HttpClientAsThread implements Runnable {
 		this.job = job;
 	}
 
-	public HttpClient init_send_request() {
+	public HttpClient initClient() {
 		HttpClient client = new HttpClient();
-		client.getParams().setParameter("http.useragent", "HTTP_POOLED_CLIENT");
+		client.getParams().setParameter("http.useragent", "BALANCER");
 		client.getParams().setContentCharset("UTF-8");
 		return client;
 	}
@@ -191,16 +192,16 @@ public class HttpClientAsThread implements Runnable {
 
 		try {
 			int returnCode = client.executeMethod(method);
+			listener.onSendRequestToAgent(JobStatus.READY);
 			// listener.onSendRequestToAgent(job);
 
 			if (returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
-				System.err
-						.println("The Post method is not implemented by this URI");
+				logger.info("The Get method is not implemented by this URI");
 
 				throw new Exception(returnCode
 						+ method.getResponseBodyAsString());
 			}
-
+			
 			br = new BufferedReader(new InputStreamReader(
 					method.getResponseBodyAsStream()));
 			String line = null;
@@ -234,15 +235,11 @@ public class HttpClientAsThread implements Runnable {
 			String uri = job.getAgent().url("crawl");
 
 			// -------------------------------------------------------
-			// Init Request ...
+			// Client Initialize ...
 			// -------------------------------------------------------
-			HttpClient httpClient = init_send_request();
-			listener.onSendRequestToAgent(JobStatus.READY);
+			HttpClient httpClient = initClient();
 
-			if (httpClient == null)
-				return;
-
-			HashMap<String, String> params = job.toMap();
+			HashMap<String, String> params = (HashMap<String, String>) MapParser.convertMap(job);
 
 			// ---------------------------------------------------------
 			// Make post method ...

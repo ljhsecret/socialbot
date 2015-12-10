@@ -2,6 +2,7 @@ package kr.co.opensns.ksbiz.socialbot.balancer.job;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.security.auth.login.Configuration;
@@ -11,6 +12,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
+import kr.co.opensns.ksbiz.socialbot.balancer.Manager;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.SharedJobTableException;
@@ -34,7 +36,7 @@ import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;
  *
  */
 
-public class JobManager /* implements Runnable */{
+public class JobManager implements Manager {
 
 	private static long TOT_JOB_COUNT;
 
@@ -56,9 +58,9 @@ public class JobManager /* implements Runnable */{
 	}
 
 	public void setConfig(BalancerConfig conf) {
-		if (this.conf!=null) {
+		if (this.conf != null) {
 			return;
-		} 
+		}
 		this.conf = conf;
 	}
 
@@ -103,19 +105,19 @@ public class JobManager /* implements Runnable */{
 
 		job.setAgent(agent);
 		job.setSeed(seed);
-		
+
 		try {
 			jobTable.put(job.getJobId(), job);
 		} catch (SharedJobTableException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return job;
 	}
-	
-	public JobEntity getJobEntity(String jobId){
-//		jobTable.
+
+	public JobEntity getJobEntity(String jobId) {
+		// jobTable.
 		return null;
 	}
 
@@ -127,34 +129,45 @@ public class JobManager /* implements Runnable */{
 
 			@Override
 			public void onSendRequestToAgent(JobStatus status) {
-				logger.info("["+Thread.currentThread().getId()+"]"+job.getSeed().getSeed() + " sent to agent("+ job.getAgent().getIp() +")- Job Id : "+job.getJobId());
-				update(job.getJobId(),status);
+				logger.info("[" + Thread.currentThread().getId() + "]"
+						+ job.getSeed().getSeed() + " sent to agent("
+						+ job.getAgent().getIp() + ")- Job Id : "
+						+ job.getJobId());
+				try {
+					jobTable.update(job.getJobId(), status);
+				} catch (SharedJobTableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			@Override
 			public void onGetResponseFromAgent(JobStatus status) {
-				logger.info("["+Thread.currentThread().getId()+"]"+"Get response about " + job.getJobId()
+				logger.info("[" + Thread.currentThread().getId() + "]"
+						+ "Get response about " + job.getJobId()
 						+ " from agent");
-				update(job.getJobId(),status);
+				try {
+					jobTable.update(job.getJobId(), status);
+				} catch (SharedJobTableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			@Override
 			public void onRequestTimeout(JobStatus status) {
-				logger.info("["+Thread.currentThread().getId()+"]"+"Request Time Out : Job ID - "+job.getJobId());
-				update(job.getJobId(),status);
+				logger.info("[" + Thread.currentThread().getId() + "]"
+						+ "Request Time Out : Job ID - " + job.getJobId());
+				try {
+					jobTable.update(job.getJobId(), status);
+				} catch (SharedJobTableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
 		new Thread(client).start();
-	}
-	
-	public void update(String jobId, JobStatus status){
-		try {
-			jobTable.update(jobId, status);
-		} catch (SharedJobTableException e) {
-			e.printStackTrace();
-		}
-		
 	}
 
 	public AgentInfo getAgent(String jobId) {
@@ -177,4 +190,48 @@ public class JobManager /* implements Runnable */{
 		return seed;
 	}
 
+	@Override
+	public void load() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void update(String key, Map<String, String> fields) {
+		String jobId = key;
+
+		try {
+			jobTable.update(jobId, JobStatus.DONE);
+		} catch (SharedJobTableException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String monitor() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{\"max_job_count\":" + jobTable.getMaxSize() + ",");
+		sb.append("\"current_job_count\":" + jobTable.getSize() + ",");
+		sb.append("\"jobs\":[");
+		for (Iterator iter = jobTable.JobIdSet().iterator(); iter.hasNext();) {
+			String jobId = (String) iter.next();
+			JobEntity job = null;
+			try {
+				job = jobTable.get(jobId);
+			} catch (SharedJobTableException e) {
+				logger.info(e);
+				continue;
+			}
+			sb.append("{\"jobId\":\"" + job.getJobId() + "\",");
+			sb.append("\"agent_ip\":\"" + job.getAgent().getIp() + "\",");
+			sb.append("\"seed\":\"" + job.getSeed().getSeed() + "\",");
+			sb.append("\"site\":\"" + job.getSeed().getSite() + "\",");
+			sb.append("\"type\":\"" + job.getSeed().getType() + "\"}");
+			if (iter.hasNext())
+				sb.append(",");
+			else
+				sb.append("]}");
+		}
+		return sb.toString();
+	}
 }
