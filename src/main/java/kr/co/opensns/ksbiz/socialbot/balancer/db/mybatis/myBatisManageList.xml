@@ -9,19 +9,47 @@
         	SITE_ID,
         	SEED_TYPE,
         	CRL_TYPE,
-        	
+        	CHANNEL_ID,
+        	WRITER_NAME,
+        	WRITER_ID,
+        	FRIENDS_CNT,
+        	ACTIVE_YN,
+        	LANGUAGE,
+        	LOCATION,
+        	TIMEZONE,
         )
         VALUES
         (
-			#{seedId},
-			#{siteType},
-			#{seedType},
-			#{crawlType},
-			#{active}
+			#{seedId, jdbcType=VARCHAR},
+			#{siteType, jdbcType=INTEGER},
+			#{seedType, jdbcType=INTEGER},
+			#{crawlType, jdbcType=INTEGER},
+			#{channelId, jdbcType=INTEGER},
+			#{writerName, jdbcType=VARCHAR},
+			#{writerId, jdbcType=VARCHAR},
+			#{friendsCnt, jdbcType=INTEGER},
+			#{active, jdbcType=CHAR},
+			#{language, jdbcType=VARCHAR},
+			#{location, jdbcType=VARCHAR},
+			#{timezone, jdbcType=VARCHAR}
         )
     </insert>
-
     
+    <update id="updateSeedInfo" parameterType="hMap">
+		UPDATE SEED_INFO
+		<set>
+    		<if test="jobStatus != null">AVG_UPD_TIME=#{jobStatus},</if>
+    		<if test="lastVisitDate != null">LAST_VISIT_DATE=#{lastVisitDate},</if>
+    		<if test="lastDocDate != null">LAST_DOC_DATE=#{lastDocDate},</if>
+    		<if test="friendsCnt != null">FRIENDS_CNT=#{friendsCnt},</if>
+    		<if test="visitCnt != null">VISIT_CNT=#{visitCnt},</if>
+    		<if test="docCnt != null">DOC_CND=#={docCnt},</if>
+    		<if test="avgUpdTime != null">AVG_UPD_TIME=#{avgUpdTime}</if>
+    	</set>
+    	WHERE SEED_ID=#{seedId}
+    	AND SITE_ID=#{siteId}
+    </update>
+
     <update id="updateAverageUpdateTime" parameterType="hMap">
     	UPDATE SEED_INFO
     	SET AVG_UPD_TIME=#{jobStatus},
