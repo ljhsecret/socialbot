@@ -1,14 +1,7 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.job;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
-
+import kr.co.opensns.ksbiz.socialbot.balancer.BalancerObject;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.client.HttpClientAsThread;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.client.HttpStatusListener;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
 
 /**
@@ -25,7 +18,7 @@ import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
  *
  */
 
-public class JobEntity {
+public class JobEntity implements BalancerObject{
 	
 	private SeedEntity targetSeed;
 	private AgentInfo workingAgent;
@@ -83,7 +76,7 @@ public class JobEntity {
 	public AgentInfo getAgent(){
 		return this.workingAgent;
 	}
-	
+	/*
 	public HashMap<String, String> toMap(){
 		HashMap<String, String> paramMap = new HashMap<String, String>();
 		
@@ -99,5 +92,11 @@ public class JobEntity {
 		paramMap.put("return", "");
 		
 		return paramMap;
+	}
+*/
+	@Override
+	public void update(BalancerObject bo) {
+		// TODO Auto-generated method stub
+		
 	}
 }

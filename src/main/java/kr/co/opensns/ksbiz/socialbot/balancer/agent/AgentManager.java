@@ -10,10 +10,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
+import kr.co.opensns.ksbiz.socialbot.balancer.Manager;
 
 import org.apache.log4j.Logger;
 
@@ -32,7 +34,7 @@ import org.apache.log4j.Logger;
  *
  */
 
-public class AgentManager {
+public class AgentManager implements Manager {
 
 	private static AgentManager instance;
 	private PriorityTable agentQueue;
@@ -56,47 +58,51 @@ public class AgentManager {
 
 	public void setConfig(BalancerConfig conf) {
 		this.conf = conf;
-		try {
-			load();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		load();
 	}
 
 	public AgentInfo getAgentInfo() {
-		return agentQueue.take();
+		synchronized (AgentManager.class) {
+			AgentInfo agent = agentQueue.take();
+			logger.info("IP : " + agent.getIp() + ",   Priority :"
+					+ agent.getPriority());
+			return agent;
+		}
 	}
 
-	public void load() throws FileNotFoundException {
+	@Override
+	public void load() {
+		// 메소드 분리 필요
 		List<HashMap<String, String>> a = conf.getAgentConfig();
 
 		Map<String, Map<String, String>> backupData = loadBackUpDataToMap();
-		
+
 		for (HashMap<String, String> m : a) {
 			AgentInfo agent = new AgentInfo();
 			agent.setIp(m.get("ip"));
 			agent.setPort(m.get("port"));
-			
-			if(backupData.containsKey(agent.getIp())){
-				Map<String,String> tmpMap = backupData.get(agent.getIp());
-				
-				String AverJobProcessingTime =tmpMap.get("AvrJobProcessingTime");
+
+			if (backupData.containsKey(agent.getIp())) {
+				Map<String, String> tmpMap = backupData.get(agent.getIp());
+
+				String AverJobProcessingTime = tmpMap
+						.get("AvrJobProcessingTime");
 				String JobCount = tmpMap.get("JobCount");
 				String LastWorkingTime = tmpMap.get("LastWorkingTime");
-				
-				agent.setAvrJobProcessingTime(AverJobProcessingTime.equals("null")?0:Long.parseLong(AverJobProcessingTime));
-				agent.setJobCount(JobCount.equals("null")?0:Long.parseLong(JobCount));
-				agent.setLastWorkingTime(LastWorkingTime.equals("null")?0:Long.parseLong(LastWorkingTime));
+
+				agent.setAvrJobProcessingTime(AverJobProcessingTime
+						.equals("null") ? 0 : Long
+						.parseLong(AverJobProcessingTime));
+				agent.setJobCount(JobCount.equals("null") ? 0 : Long
+						.parseLong(JobCount));
+				agent.setLastWorkingTime(LastWorkingTime.equals("null") ? 0
+						: Long.parseLong(LastWorkingTime));
 			}
 			logger.info("agent Load done : " + agent.getIp());
 			agentQueue.put(agent);
 		}
-		
-		a=null;
-		
-		logger.info("Seed Queue Loading Done");
-		
+
+		a = null;
 	}
 
 	public Map<String, Map<String, String>> loadBackUpDataToMap() {
@@ -139,16 +145,37 @@ public class AgentManager {
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(new File(localFilePath))));
 
-//		while(agentQueue.)
-		
 		bw.close();
 	}
 
-	//
-	public void update(String ID, Map<String, String> field) {
+	@Override
+	public void update(String key, Map<String, String> fields) {
 		synchronized (AgentManager.class) {
-			field.get("status");
-			field.get("Processing Time");
+			fields.get("status");
+			fields.get("Processing Time");
 		}
+	}
+
+	@Override
+	public String monitor() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("{\"agent_count\":"+agentQueue.size()+",");
+		sb.append("\"agents\":[");
+		for (Iterator iter = agentQueue.IpSet().iterator(); iter.hasNext();) {
+			AgentInfo agent = agentQueue.get((String) iter.next());
+			sb.append("{\"ip\":\""+agent.getIp()+"\",");
+			sb.append("\"port\":\""+agent.getPort()+"\",");
+			sb.append("\"jobCount\":"+agent.getJobCount()+",");
+			sb.append("\"avr_job_processing_time\":"+agent.getAvrJobProcessingTime()+",");
+			sb.append("\"priority\":"+agent.getPriority()+"}");
+			
+			if(iter.hasNext())
+				sb.append(",");
+			else
+				sb.append("]");
+		}
+		sb.append("}");
+		return sb.toString();
 	}
 }

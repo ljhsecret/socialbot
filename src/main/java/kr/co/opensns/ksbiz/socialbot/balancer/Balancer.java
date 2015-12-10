@@ -36,7 +36,7 @@ public class Balancer implements Runnable {
 
 	public Balancer(BalancerConfig conf) {
 		jobManager = JobManager.getInstance();
-		seedManager = SeedManager.getinstance();
+		seedManager = SeedManager.getInstance();
 		agentManager = AgentManager.getInstance();
 
 		agentManager.setConfig(conf);
