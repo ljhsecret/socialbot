@@ -18,7 +18,7 @@
 			<type>id</type>
 			<result-type>json</result-type>
 		</seed>
-		<seed>
+ 		<seed>
 			<channel>sns</channel>
 			<site>twitter</site>
 			<repository>local</repository>
@@ -26,7 +26,7 @@
 			<weight>2</weight>
 			<type>id</type>
 			<result-type>json</result-type>
-		</seed>
+		</seed> 
 	</seed-info>
 
 	<agent-info>
@@ -34,13 +34,13 @@
 			<ip>10.202.230.219</ip>
 			<port>8080</port>
 		</agent>
-		<!-- 
+		
 		<agent>
 			<ip>localhost</ip>
 			<port>8080</port>
 		</agent>
 		
-		
+	
 		<agent>
 			<ip>11.11.12.109</ip>
 			<port>7575</port>
@@ -65,6 +65,7 @@
 			<ip>11.11.12.114</ip>
 			<port>7575</port>
 		</agent>
+			<!-- 
 		<agent>
 			<ip>11.11.12.115</ip>
 			<port>7575</port>

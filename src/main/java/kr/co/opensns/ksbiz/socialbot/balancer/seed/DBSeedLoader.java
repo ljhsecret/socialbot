@@ -18,10 +18,16 @@ public class DBSeedLoader extends Loadable {
 	SeedQueue Load(String path, String type) {
 		SeedQueue queue = new SeedQueue(type);
 
-		List<Map<String, Object>> results = cf.selectSeedInfo();
+/*		List<Map<String, Object>> results = cf.selectSeedInfo();
 		// System.out.println(results);
 		for (Map<String, Object> result : results) {
 			queue.put(MapToSeedEntity(result));
+		}*/
+		
+		List<SeedDO> results = cf.selectSeedInfo();
+
+		for (SeedDO result : results) {
+			queue.put(new SeedEntity(result));
 		}
 
 		return queue;

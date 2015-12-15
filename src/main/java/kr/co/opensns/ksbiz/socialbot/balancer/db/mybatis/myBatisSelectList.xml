@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="myBatisSelectList">
 
-	<select id="selectSeedInfo" resultType="hMap" parameterType="int">
+<mapper namespace="myBatisSelectList">
+	<resultMap type="seed" id="resultMap">
+		<result property="site" column="SITE_ID" javaType="java.lang.String"/>
+		<result property="seed" column="SEED_ID" javaType="java.lang.String"/>
+		<result property="type" column="SEED_TYPE" javaType="java.lang.String"/>
+		<result property="crawlCount" column="VISIT_CNT" javaType="long"/>
+		<result property="crawledDocCount" column="DOC_CNT" javaType="long"/>
+		<result property="lastCrawledDate" column="LAST_VISIT_DATE" javaType="long"/>
+		<result property="firstCrawledDate" column="FIRST_VISIT_DATE" javaType="long"/>
+		<result property="cursor" column="CURSOR" javaType="java.lang.String"/>
+	</resultMap>
+	<select id="selectSeedInfo" resultMap="resultMap">
 		SELECT *
 		FROM seed_info
 	</select>
-
-<!-- 
-	<select id="selectTopicData" resultType="hMap" parameterType="int">
-		SELECT *
-		FROM TPIC_INFO
-		WHERE TPIC_SN=#{tpicSN}
-	</select>
-
-	<select id="selectRelTermInfo" resultType="hMap" parameterType="int">
-		SELECT
-		RELTERM_INFO.RELTERM
-		FROM TPIC_INFO JOIN RELTERM_INFO
-		ON TPIC_INFO.TPIC_SN = RELTERM_INFO.TPIC_SN
-		WHERE TPIC_INFO.TPIC_SN = #{tpicSN};
-	</select>
-
-	<select id="selectCategorybyTopic" resultType="int" parameterType="int">
-		SELECT CTGRY_SN
-		FROM CTGRY_TPIC_MAPNG
-		WHERE TPIC_SN=#{tpicSN}
-	</select>
-	
- -->
+	<!-- <select id="selectSeedInfo" resultType="hMap" parameterType="int"> 
+		SELECT * FROM seed_info </select> -->
+	<!-- <select id="selectTopicData" resultType="hMap" parameterType="int"> 
+		SELECT * FROM TPIC_INFO WHERE TPIC_SN=#{tpicSN} </select> <select id="selectRelTermInfo" 
+		resultType="hMap" parameterType="int"> SELECT RELTERM_INFO.RELTERM FROM TPIC_INFO 
+		JOIN RELTERM_INFO ON TPIC_INFO.TPIC_SN = RELTERM_INFO.TPIC_SN WHERE TPIC_INFO.TPIC_SN 
+		= #{tpicSN}; </select> <select id="selectCategorybyTopic" resultType="int" 
+		parameterType="int"> SELECT CTGRY_SN FROM CTGRY_TPIC_MAPNG WHERE TPIC_SN=#{tpicSN} 
+		</select> -->
 </mapper>

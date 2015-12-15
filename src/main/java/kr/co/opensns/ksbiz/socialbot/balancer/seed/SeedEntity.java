@@ -19,95 +19,34 @@ import java.util.Map;
  */
 
 public class SeedEntity {
-	String site;
-	String seed;
-	String type;
-	long crawlCount;
-	long crawledDocCount;
-	long lastCrawlDate;
-	long firstCrawlDate;
-	String cursor;
 	
+	private SeedDO seed;
 	
-	public long getFirstCrawlDate() {
-		return firstCrawlDate;
+	public SeedEntity(){
+		this(null);
 	}
 
-	public void setFirstCrawlDate(long firstCrawlDate) {
-		this.firstCrawlDate = firstCrawlDate;
-	}
-
-	public String getSite() {
-		return site;
-	}
-
-	public String getSeed() {
-		return seed;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public long getCrawlCount() {
-		return crawlCount;
-	}
-
-	public long getCrawledDocCount() {
-		return crawledDocCount;
-	}
-
-	public long getLastCrawlDate() {
-		return lastCrawlDate;
-	}
-
-	public String getCursor() {
-		return cursor;
-	}
-
-	public void setSite(String site) {
-		this.site = site;
-	}
-
-	public void setSeed(String seed) {
+	public SeedEntity(SeedDO seed) {
+		if(seed==null)
+			seed = new SeedDO();
 		this.seed = seed;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public void setCrawlCount(long crawlCount) {
-		this.crawlCount = crawlCount;
-	}
-
-	public void setCrawledDocCount(long crawledDocCount) {
-		this.crawledDocCount = crawledDocCount;
-	}
-
-	public void setLastCrawlDate(long lastCrawlDate) {
-		this.lastCrawlDate = lastCrawlDate;
-	}
-
-	public void setCursor(String cursor) {
-		this.cursor = cursor;
 	}
 
 	public void update(Map<String, String> fields) {
 		for (Iterator<String> itr = fields.keySet().iterator(); itr.hasNext();) {
 			String fieldName = (String) itr.next();
 
-			this.crawlCount++;
+			seed.crawlCount++;
 
 			switch (fieldName.toLowerCase()) {
 			case "cursor":
-				this.cursor = fields.get(fieldName);
+				seed.cursor = fields.get(fieldName);
 				break;
 			case "lastcrawldate":
-				this.lastCrawlDate = Long.parseLong(fields.get(fieldName));
+				seed.lastCrawledDate = Long.parseLong(fields.get(fieldName));
 				break;
 			case "crawleddoccount":
-				crawledDocCount += Long.parseLong(fields.get(fieldName));
+				seed.crawledDocCount += Long.parseLong(fields.get(fieldName));
 				break;
 			default:
 				break;
@@ -117,14 +56,70 @@ public class SeedEntity {
 
 	private double getAvrUpdateTime() {
 		try {
-			return lastCrawlDate - firstCrawlDate / crawlCount;
+			return seed.lastCrawledDate - seed.firstCrawledDate / seed.crawlCount;
 		} catch (Exception e) {
 			return 0;
 		} 
 	}
 
 	public double getPriority() {
-		getAvrUpdateTime();
-		return 0;
+		return Double.parseDouble(seed.seed);
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+
+	public void setSite(String site) {
+		this.seed.setSite(site);
+	}
+
+	public void setSeed(String seed) {
+		this.seed.setSeed(seed);
+	}
+
+	public void setCrawlCount(int crawlCount) {
+		this.seed.setCrawlCount(crawlCount);
+	}
+
+	public void setCrawledDocCount(int crawledDocCount) {
+		this.seed.setCrawledDocCount(crawledDocCount);
+	}
+
+	public void setLastCrawlDate(long lastCrawlDate) {
+		this.seed.setLastCrawledDate(lastCrawlDate);
+	}
+
+	public void setFirstCrawlDate(long firstCrawlDate) {
+		this.seed.setFirstCrawledDate(firstCrawlDate);
+	}
+
+	public void setCursor(String cursor) {
+		this.seed.setCursor(cursor);
+	}
+
+	public void setType(String type) {
+		this.seed.setType(type);
+	}
+
+	public void setCrawledDocCount(long crawledDocCount) {
+		this.seed.setCrawledDocCount(crawledDocCount);
+	}
+	
+	public String getSeed() {
+		return this.seed.getSeed();
+	}
+
+	public String getSite() {
+		return this.seed.getSite();
+	}
+
+	public String getType() {
+		return this.seed.getType();
+	}
+
+	public String getCursor() {
+		return this.seed.getCursor();
 	}
 }

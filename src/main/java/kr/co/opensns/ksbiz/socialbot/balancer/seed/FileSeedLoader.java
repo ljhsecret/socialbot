@@ -52,7 +52,7 @@ public class FileSeedLoader extends Loadable{
 				seed.setLastCrawlDate(csv[6].equals("null")?0:Long.parseLong(csv[6]));
 				
 				q.put(seed);
-				logger.info("Seed : "+seed.seed);
+				logger.info("Seed : "+seed.getSeed());
 			}
 			br.close();
 		} catch (FileNotFoundException fnfe) {

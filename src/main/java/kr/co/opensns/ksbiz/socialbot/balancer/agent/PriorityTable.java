@@ -33,9 +33,9 @@ public class PriorityTable {
 
 			for (Entry<String, AgentInfo> e : tmpList) {
 				map.put(e.getKey(), e.getValue());
+//				System.out.println("IP : "+e.getValue().getIp()+",    Priority : "+e.getValue().getPriority());
 			}
 		}
-
 	}
 
 	public void put(AgentInfo agent) {
@@ -56,7 +56,7 @@ public class PriorityTable {
 
 			Entry<String, AgentInfo> entry = (Entry<String, AgentInfo>) itr
 					.next();
-
+			
 			AgentInfo agent = entry.getValue();
 			agent.setJobCount(agent.getJobCount() + 1);
 
@@ -86,4 +86,22 @@ public class PriorityTable {
 			sort();
 		}
 	}
+	
+	public AgentInfo get(String ip){
+		return map.get(ip);
+	}
+	
+	public Set<String> IpSet(){
+		return map.keySet();
+	}
+	
+	public int size(){
+		return map.size();
+	}
+	
+	/*public int runAgentSize(){
+		for(Iterator iter = map.keySet().iterator();iter.hasNext();){
+			if(map.get(iter.next()).getStatus().equals(null));
+		}
+	}*/
 }
