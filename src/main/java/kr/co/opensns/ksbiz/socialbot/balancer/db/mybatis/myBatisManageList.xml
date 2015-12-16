@@ -2,124 +2,156 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="myBatisManageList">
-    <insert id="insertSeedInfo" parameterType="hMap">
-        INSERT INTO SEED_INFO
-        (
-        	SEED_ID,
-        	SITE_ID,
-        	SEED_TYPE,
-        	CRL_TYPE,
-        	CHANNEL_ID,
-        	WRITER_NAME,
-        	WRITER_ID,
-        	FRIENDS_CNT,
-        	ACTIVE_YN,
-        	LANGUAGE,
-        	LOCATION,
-        	TIMEZONE,
-        )
-        VALUES
-        (
+	<resultMap type="seed" id="resultMap">
+		<result property="siteId" column="SITE_ID" javaType="int" />
+		<result property="seedId" column="SEED_ID" javaType="java.lang.String" />
+		<result property="seedType" column="SEED_TYPE" javaType="int" />
+		<result property="crlType" column="CRL_TYPE" javaType="int" />
+		<result property="channelId" column="CHANNEL_ID" javaType="int" />
+		<result property="cursor" column="CURSOR" javaType="java.lang.String" />
+		<result property="writerName" column="WRITER_NAME" javaType="java.lang.String" />
+		<result property="writerId" column="WRITER_ID" javaType="java.lang.String" />
+		<result property="avgUpdTime" column="AVG_UPD_TIME" javaType="int" />
+		<result property="visitCnt" column="VISIT_CNT" javaType="int" />
+		<result property="docCnt" column="DOC_CNT" javaType="int" />
+		<result property="firstVisitDate" column="FIRST_VISIT_DATE"
+			javaType="java.util.Date" />
+		<result property="lastVisitDate" column="LAST_VISIT_DATE"
+			javaType="java.util.Date" />
+		<result property="friendsCnt" column="FRIENDS_CNT" javaType="int" />
+		<result property="firstDocDate" column="FIRST_DOC_DATE"
+			javaType="java.util.Date" />
+		<result property="lastDocDate" column="LAST_DOC_DATE" javaType="java.util.Date" />
+		<result property="activeYn" column="ACTIVE_YN" javaType="java.lang.String" />
+		<result property="location" column="LOCATION" javaType="java.lang.String" />
+		<result property="language" column="LANGUAGE" javaType="java.lang.String" />
+		<result property="timezone" column="TIMEZONE" javaType="java.lang.String" />
+	</resultMap>
+	<insert id="insertSeedInfoWithDO" parameterType="seed">
+		INSERT INTO SEED_INFO
+		(
+			SEED_ID,
+			SITE_ID,
+			SEED_TYPE,
+			CRL_TYPE,
+			CURSOR,
+			CHANNEL_ID,
+			WRITER_NAME,
+			WRITER_ID,
+			FIRST_VISIT_DATE,
+			FIRST_DOC_DATE,
+			FRIENDS_CNT,
+			ACTIVE_YN,
+			LANGUAGE,
+			LOCATION,
+			TIMEZONE,
+		)
+		VALUES
+		(
 			#{seedId, jdbcType=VARCHAR},
-			#{siteType, jdbcType=INTEGER},
+			#{siteId, jdbcType=INTEGER},
 			#{seedType, jdbcType=INTEGER},
 			#{crawlType, jdbcType=INTEGER},
+			#{cursor, jdbcType=VARCHAR},
 			#{channelId, jdbcType=INTEGER},
 			#{writerName, jdbcType=VARCHAR},
 			#{writerId, jdbcType=VARCHAR},
+			#{firstVisitDate, jdbcType=DATE},
+			#{firstDocDate, jdbcType=DATE},
 			#{friendsCnt, jdbcType=INTEGER},
-			#{active, jdbcType=CHAR},
+			#{activeYn, jdbcType=CHAR},
 			#{language, jdbcType=VARCHAR},
 			#{location, jdbcType=VARCHAR},
 			#{timezone, jdbcType=VARCHAR}
-        )
-    </insert>
-    
-    <update id="updateSeedInfo" parameterType="hMap">
+		)
+	</insert>
+	
+	<insert id="insertSeedInfoWithMap" parameterType="hMap">
+		INSERT INTO SEED_INFO
+		(
+			SEED_ID,
+			SITE_ID,
+			SEED_TYPE,
+			CRL_TYPE,
+			CURSOR,
+			CHANNEL_ID,
+			WRITER_NAME,
+			WRITER_ID,
+			FIRST_VISIT_DATE,
+			FIRST_DOC_DATE,
+			FRIENDS_CNT,
+			ACTIVE_YN,
+			LANGUAGE,
+			LOCATION,
+			TIMEZONE,
+		)
+		VALUES
+		(
+			#{seedId, jdbcType=VARCHAR},
+			#{siteId, jdbcType=INTEGER},
+			#{seedType, jdbcType=INTEGER},
+			#{crawlType, jdbcType=INTEGER},
+			#{cursor, jdbcType=VARCHAR},
+			#{channelId, jdbcType=INTEGER},
+			#{writerName, jdbcType=VARCHAR},
+			#{writerId, jdbcType=VARCHAR},
+			#{firstVisitDate, jdbcType=DATE},
+			#{firstDocDate, jdbcType=DATE},
+			#{friendsCnt, jdbcType=INTEGER},
+			#{activeYn, jdbcType=CHAR},
+			#{language, jdbcType=VARCHAR},
+			#{location, jdbcType=VARCHAR},
+			#{timezone, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateSeedInfoWithDO" parameterType="seed">
 		UPDATE SEED_INFO
 		<set>
-    		<if test="jobStatus != null">AVG_UPD_TIME=#{jobStatus},</if>
-    		<if test="lastVisitDate != null">LAST_VISIT_DATE=#{lastVisitDate},</if>
-    		<if test="lastDocDate != null">LAST_DOC_DATE=#{lastDocDate},</if>
-    		<if test="friendsCnt != null">FRIENDS_CNT=#{friendsCnt},</if>
-    		<if test="visitCnt != null">VISIT_CNT=#{visitCnt},</if>
-    		<if test="docCnt != null">DOC_CND=#={docCnt},</if>
-    		<if test="avgUpdTime != null">AVG_UPD_TIME=#{avgUpdTime}</if>
-    	</set>
-    	WHERE SEED_ID=#{seedId}
-    	AND SITE_ID=#{siteId}
-    </update>
-   <!-- 
-    <update id="updateAverageUpdateTime" parameterType="hMap">
-    	UPDATE SEED_INFO
-    	SET AVG_UPD_TIME=#{jobStatus},
-    		LAST_VISIT_DATE=#{lastVisitDate},
-    		FRIENDS_CNT=#{friendsCnt},
-    		VISIT_CNT=#{visitCnt},
-    		DOC_CND=#={docCnt}
-    	WHERE SEED_ID=#{seedId}
-    	AND SITE_ID=#{siteId}
-    </update>
-    
-    <update id="updateLastVisitDate" parameterType="hMap">
-    	UPDATE SEED_INFO
-    	SET AVG_UPD_TIME=#{jobStatus},
-    		LAST_VISIT_DATE=#{lastVisitDate},
-    		FRIENDS_CNT=#{friendsCnt},
-    		VISIT_CNT=#{visitCnt},
-    		DOC_CND=#={docCnt}
-    	WHERE SEED_ID=#{seedId}
-    	AND SITE_ID=#{siteId}
-    </update>
-    
-    <update id="updateVisitCount" parameterType="hMap">
-    	UPDATE SEED_INFO
-    	SET AVG_UPD_TIME=#{jobStatus},
-    		LAST_VISIT_DATE=#{lastVisitDate},
-    		FRIENDS_CNT=#{friendsCnt},
-    		VISIT_CNT=#{visitCnt},
-    		DOC_CND=#={docCnt}
-    	WHERE SEED_ID=#{seedId}
-    	AND SITE_ID=#{siteId}
-    </update>
-    
-    <update id="updateDocCount" parameterType="hMap">
-    	UPDATE SEED_INFO
-    	SET	DOC_CND=#={docCnt}
-    	WHERE SEED_ID=#{seedId}
-    	AND SITE_ID=#{siteId}
-    </update>
-    
-    <update id="updateLanguage" parameterType="hMap">
-    	UPDATE SEED_INFO
-    	SET LANGUAGE=#{language}
-    	WHERE SEED_ID=#{seedId}
-    	AND SITE_ID=#{siteId}
-    </update>
-    
-    <update id="updateLocation" parameterType="hMap">
-    	UPDATE SEED_INFO
-    	SET LOCATION=#{location}
-    	WHERE SEED_ID=#{seedId}
-    	AND SITE_ID=#{siteId}
-    </update>
-    
-    <update id="updateTimeZone" parameterType="hMap">
-    	UPDATE SEED_INFO
-    	SET TIMEZONE=#{timeZone}
-    	WHERE SEED_ID=#{seedId}
-    	AND SITE_ID=#{siteId}
-    </update>
-    
- 
-    <update id="updateEndStatus" parameterType="AnalWorkManager">
-    	UPDATE ANALS_WORK_HIT_INFO
-    	SET ANALS_WORK_STTUS_CODE=#{jobStatus},
-    		ANALS_ENDDE_HOUR=#{analEndDate},
-    		ERROR_CN=#{errorMsg}
-    	WHERE TPIC_SN=#{topicSequnceNumber}
-    	AND ANALS_BGNDE_HOUR=#{StringAnalBeginDate}
-    </update>
-     -->
-    
+			<if test="lastVisitDate != null">LAST_VISIT_DATE=#{lastVisitDate},</if>
+			<if test="lastDocDate != null">LAST_DOC_DATE=#{lastDocDate},</if>
+			<if test="friendsCnt != null">FRIENDS_CNT=#{friendsCnt},</if>
+			<if test="visitCnt != null">VISIT_CNT=#{visitCnt},</if>
+			<if test="docCnt != null">DOC_CND=#={docCnt},</if>
+			<if test="avgUpdTime != null">AVG_UPD_TIME=#{avgUpdTime}</if>
+		</set>
+		WHERE SEED_ID=#{seedId}
+		AND SITE_ID=#{siteId}
+	</update>
+	
+	<update id="updateSeedInfoWithMap" parameterType="hMap">
+		UPDATE SEED_INFO
+		<set>
+			<if test="lastVisitDate != null">LAST_VISIT_DATE=#{lastVisitDate},</if>
+			<if test="lastDocDate != null">LAST_DOC_DATE=#{lastDocDate},</if>
+			<if test="friendsCnt != null">FRIENDS_CNT=#{friendsCnt},</if>
+			<if test="visitCnt != null">VISIT_CNT=#{visitCnt},</if>
+			<if test="docCnt != null">DOC_CND=#={docCnt},</if>
+			<if test="avgUpdTime != null">AVG_UPD_TIME=#{avgUpdTime}</if>
+		</set>
+		WHERE SEED_ID=#{seedId}
+		AND SITE_ID=#{siteId}
+	</update>
+	
+	<!-- <update id="updateAverageUpdateTime" parameterType="hMap"> UPDATE SEED_INFO 
+		SET AVG_UPD_TIME=#{jobStatus}, LAST_VISIT_DATE=#{lastVisitDate}, FRIENDS_CNT=#{friendsCnt}, 
+		VISIT_CNT=#{visitCnt}, DOC_CND=#={docCnt} WHERE SEED_ID=#{seedId} AND SITE_ID=#{siteId} 
+		</update> <update id="updateLastVisitDate" parameterType="hMap"> UPDATE SEED_INFO 
+		SET AVG_UPD_TIME=#{jobStatus}, LAST_VISIT_DATE=#{lastVisitDate}, FRIENDS_CNT=#{friendsCnt}, 
+		VISIT_CNT=#{visitCnt}, DOC_CND=#={docCnt} WHERE SEED_ID=#{seedId} AND SITE_ID=#{siteId} 
+		</update> <update id="updateVisitCount" parameterType="hMap"> UPDATE SEED_INFO 
+		SET AVG_UPD_TIME=#{jobStatus}, LAST_VISIT_DATE=#{lastVisitDate}, FRIENDS_CNT=#{friendsCnt}, 
+		VISIT_CNT=#{visitCnt}, DOC_CND=#={docCnt} WHERE SEED_ID=#{seedId} AND SITE_ID=#{siteId} 
+		</update> <update id="updateDocCount" parameterType="hMap"> UPDATE SEED_INFO 
+		SET DOC_CND=#={docCnt} WHERE SEED_ID=#{seedId} AND SITE_ID=#{siteId} </update> 
+		<update id="updateLanguage" parameterType="hMap"> UPDATE SEED_INFO SET LANGUAGE=#{language} 
+		WHERE SEED_ID=#{seedId} AND SITE_ID=#{siteId} </update> <update id="updateLocation" 
+		parameterType="hMap"> UPDATE SEED_INFO SET LOCATION=#{location} WHERE SEED_ID=#{seedId} 
+		AND SITE_ID=#{siteId} </update> <update id="updateTimeZone" parameterType="hMap"> 
+		UPDATE SEED_INFO SET TIMEZONE=#{timeZone} WHERE SEED_ID=#{seedId} AND SITE_ID=#{siteId} 
+		</update> <update id="updateEndStatus" parameterType="AnalWorkManager"> UPDATE 
+		ANALS_WORK_HIT_INFO SET ANALS_WORK_STTUS_CODE=#{jobStatus}, ANALS_ENDDE_HOUR=#{analEndDate}, 
+		ERROR_CN=#{errorMsg} WHERE TPIC_SN=#{topicSequnceNumber} AND ANALS_BGNDE_HOUR=#{StringAnalBeginDate} 
+		</update> -->
+
 </mapper>

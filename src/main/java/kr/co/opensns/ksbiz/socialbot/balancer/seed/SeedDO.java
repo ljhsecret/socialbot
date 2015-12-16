@@ -1,62 +1,147 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
+import java.util.Date;
+
 public class SeedDO {
-	String site;
-	String seed;
-	String type;
-	long crawlCount;
-	long crawledDocCount;
-	long lastCrawledDate;
-	long firstCrawledDate;
+	String seedId;
+	int siteId;
+	int seedType;
+	int crlType;
+	int channelId;
 	String cursor;
-	
-	
-	public String getSite() {
-		return site;
+	String writerName;
+	String writerId;
+	int avgUpdTime;
+	int visitCnt;
+	int docCnt;
+	Date firstVisitDate;
+	Date lastVisitDate;
+	int friendsCnt;
+	Date firstDocDate;
+	Date lastDocDate;
+	String activeYn;
+	String location;
+	String language;
+	String timezone;
+	public String getSeedId() {
+		return seedId;
 	}
-	public String getSeed() {
-		return seed;
+	public int getSiteId() {
+		return siteId;
 	}
-	public String getType() {
-		return type;
+	public int getSeedType() {
+		return seedType;
 	}
-	public long getCrawlCount() {
-		return crawlCount;
+	public int getCrlType() {
+		return crlType;
 	}
-	public long getCrawledDocCount() {
-		return crawledDocCount;
-	}
-	public long getLastCrawlDate() {
-		return lastCrawledDate;
-	}
-	public long getFirstCrawlDate() {
-		return firstCrawledDate;
+	public int getChannelId() {
+		return channelId;
 	}
 	public String getCursor() {
 		return cursor;
 	}
-	public void setSite(String site) {
-		this.site = site;
+	public String getWriterName() {
+		return writerName;
 	}
-	public void setSeed(String seed) {
-		this.seed = seed;
+	public String getWriterId() {
+		return writerId;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public int getAvgUpdTime() {
+		return avgUpdTime;
 	}
-	public void setCrawlCount(long crawlCount) {
-		this.crawlCount = crawlCount;
+	public int getVisitCnt() {
+		return visitCnt;
 	}
-	public void setCrawledDocCount(long crawledDocCount) {
-		this.crawledDocCount = crawledDocCount;
+	public int getDocCnt() {
+		return docCnt;
 	}
-	public void setLastCrawledDate(long lastCrawlDate) {
-		this.lastCrawledDate = lastCrawlDate;
+	public Date getFirstVisitDate() {
+		return firstVisitDate;
 	}
-	public void setFirstCrawledDate(long firstCrawlDate) {
-		this.firstCrawledDate = firstCrawlDate;
+	public Date getLastVisitDate() {
+		return lastVisitDate;
+	}
+	public int getFriendsCnt() {
+		return friendsCnt;
+	}
+	public Date getFirstDocDate() {
+		return firstDocDate;
+	}
+	public Date getLastDocDate() {
+		return lastDocDate;
+	}
+	public String getActiveYn() {
+		return activeYn;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public String getLanguage() {
+		return language;
+	}
+	public String getTimezone() {
+		return timezone;
+	}
+	public void setSeedId(String seedId) {
+		this.seedId = seedId;
+	}
+	public void setSiteId(int siteId) {
+		this.siteId = siteId;
+	}
+	public void setSeedType(int seedType) {
+		this.seedType = seedType;
+	}
+	public void setCrlType(int crlType) {
+		this.crlType = crlType;
+	}
+	public void setChannelId(int channelId) {
+		this.channelId = channelId;
 	}
 	public void setCursor(String cursor) {
 		this.cursor = cursor;
 	}
+	public void setWriterName(String writerName) {
+		this.writerName = writerName;
+	}
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
+	}
+	public void setAvgUpdTime(int avgUpdTime) {
+		this.avgUpdTime = avgUpdTime;
+	}
+	public void setVisitCnt(int visitCnt) {
+		this.visitCnt = visitCnt;
+	}
+	public void setDocCnt(int docCnt) {
+		this.docCnt = docCnt;
+	}
+	public void setFirstVisitDate(Date firstVisitDate) {
+		this.firstVisitDate = firstVisitDate;
+	}
+	public void setLastVisitDate(Date lastVisitDate) {
+		this.lastVisitDate = lastVisitDate;
+	}
+	public void setFriendsCnt(int friendsCnt) {
+		this.friendsCnt = friendsCnt;
+	}
+	public void setFirstDocDate(Date firstDocDate) {
+		this.firstDocDate = firstDocDate;
+	}
+	public void setLastDocDate(Date lastDocDate) {
+		this.lastDocDate = lastDocDate;
+	}
+	public void setActiveYn(String activeYn) {
+		this.activeYn = activeYn;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
+	}
+
 }

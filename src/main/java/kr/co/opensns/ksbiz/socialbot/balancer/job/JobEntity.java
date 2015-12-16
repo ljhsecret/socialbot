@@ -24,10 +24,10 @@ public class JobEntity implements BalancerObject{
 	private AgentInfo workingAgent;
 	
 	private long jobId;
-	private String siteId;
-	private String seed;
+	private int siteId;
+	private String seedId;
 	private String cursor;
-	private String crawlType;
+	private int crawlType;
 	private String contentType;
 	
 	
@@ -59,10 +59,10 @@ public class JobEntity implements BalancerObject{
 	
 	public void setSeed(SeedEntity seed){
 		this.targetSeed = seed;
-		this.siteId = seed.getSite();
-		this.seed = seed.getSeed();
+		this.siteId = seed.getSiteId();
+		this.seedId = seed.getSeedId();
 		this.cursor = seed.getCursor();
-		this.crawlType = seed.getType();
+		this.crawlType = seed.getCrawlType();
 	}
 	
 	public void setAgent(AgentInfo agent){

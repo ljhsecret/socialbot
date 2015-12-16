@@ -11,6 +11,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 
+import com.google.gson.annotations.Until;
+
 import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.Manager;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
@@ -130,7 +132,7 @@ public class JobManager implements Manager {
 			@Override
 			public void onSendRequestToAgent(JobStatus status) {
 				logger.info("[" + Thread.currentThread().getId() + "]"
-						+ job.getSeed().getSeed() + " sent to agent("
+						+ job.getSeed().getSeedId() + " sent to agent("
 						+ job.getAgent().getIp() + ")- Job Id : "
 						+ job.getJobId());
 				try {
@@ -191,11 +193,11 @@ public class JobManager implements Manager {
 	}
 
 	@Override
+	@Deprecated
 	public void load() {
-		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public void update(String key, Map<String, String> fields) {
 		String jobId = key;
@@ -224,9 +226,9 @@ public class JobManager implements Manager {
 			}
 			sb.append("{\"jobId\":\"" + job.getJobId() + "\",");
 			sb.append("\"agent_ip\":\"" + job.getAgent().getIp() + "\",");
-			sb.append("\"seed\":\"" + job.getSeed().getSeed() + "\",");
-			sb.append("\"site\":\"" + job.getSeed().getSite() + "\",");
-			sb.append("\"type\":\"" + job.getSeed().getType() + "\"}");
+			sb.append("\"seed\":\"" + job.getSeed().getSeedId() + "\",");
+			sb.append("\"site\":\"" + job.getSeed().getSiteId() + "\",");
+			sb.append("\"type\":\"" + job.getSeed().getCrawlType() + "\"}");
 			if (iter.hasNext())
 				sb.append(",");
 			else
