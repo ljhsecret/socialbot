@@ -1,5 +1,6 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class DBSeedLoader extends Loadable {
 
 	@Override
 	SeedQueue Load(String path, String type) {
-		SeedQueue queue = new SeedQueue(type);
+		SeedQueue queue = new SeedQueue(01);
 
 /*		List<Map<String, Object>> results = cf.selectSeedInfo();
 		// System.out.println(results);
@@ -44,22 +45,22 @@ public class DBSeedLoader extends Loadable {
 
 			switch (key) {
 			case "SITE_ID":
-				seed.setSite(value.toString());
+				seed.setSiteId(Integer.parseInt(value.toString()));
 				break;
 			case "SEED_ID":
-				seed.setSeed(value.toString());
+				seed.setSeedId(value.toString());
 				break;
 			case "VISIT_CNT":
-				seed.setCrawlCount(Integer.parseInt(value.toString()));
+				seed.setVisitCnt(Integer.parseInt(value.toString()));
 				break;
 			case "DOC_CNT":
-				seed.setCrawledDocCount(Integer.parseInt(value.toString()));
+				seed.setDocCount(Integer.parseInt(value.toString()));
 				break;
 			case "LAST_VISIT_DATE":
-				seed.setLastCrawlDate(Long.parseLong(value.toString()));
+				seed.setLastVisitDate((Date) value);
 				break;
 			case "FIRST_VISIT_DATE":
-				seed.setFirstCrawlDate(Long.parseLong(value.toString()));
+				seed.setFirstVisitDate((Date)value);
 				break;
 			case "CURSOR":
 				seed.setCursor(value.toString());

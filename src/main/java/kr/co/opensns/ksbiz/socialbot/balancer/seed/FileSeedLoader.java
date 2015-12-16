@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -33,7 +34,7 @@ public class FileSeedLoader extends Loadable{
 	
 	@Override
 	public SeedQueue Load(String path, String type) {
-		SeedQueue q = new SeedQueue(type);
+		SeedQueue q = new SeedQueue(00);
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(path))));
 			logger.info("Reading Seed file : "+path);
@@ -44,15 +45,15 @@ public class FileSeedLoader extends Loadable{
 				
 				if(csv.length < 6) continue;
 				
-				seed.setSite(csv[1]);
-				seed.setSeed(csv[2]);
+				seed.setSiteId(Integer.parseInt(csv[1]));
+				seed.setSeedId(csv[2]);
 				seed.setCursor(csv[3]);
-				seed.setCrawlCount(csv[4].equals("null")?0:Integer.parseInt(csv[4]));
-				seed.setCrawledDocCount(csv[5].equals("null")?0:Long.parseLong(csv[5]));
-				seed.setLastCrawlDate(csv[6].equals("null")?0:Long.parseLong(csv[6]));
+				seed.setVisitCnt(csv[4].equals("null")?0:Integer.parseInt(csv[4]));
+				seed.setDocCount(csv[5].equals("null")?0:Integer.parseInt(csv[5]));
+				seed.setLastVisitDate(new Date());
 				
 				q.put(seed);
-				logger.info("Seed : "+seed.getSeed());
+				logger.info("Seed : "+seed.getSeedId());
 			}
 			br.close();
 		} catch (FileNotFoundException fnfe) {

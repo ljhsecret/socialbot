@@ -58,13 +58,13 @@ public class HttpPooledResultWorker extends HttpPooledWorker {
 			switch (query_map.get("StatusCode")) {
 			case "01":
 				jobManager.update(jobId, query_map);
-				seedManager.update(jobManager.getSeed(jobId).getSeed(), query_map);
+				seedManager.update(jobManager.getSeed(jobId).getSeedId(), query_map);
 				agentManager.update(jobManager.getAgent(jobId).getIp(), query_map);
 				break;
 
 			case "02":
 				jobManager.update(jobId, query_map);
-				seedManager.update(jobManager.getSeed(jobId).getSeed(), query_map);
+				seedManager.update(jobManager.getSeed(jobId).getSeedId(), query_map);
 				agentManager.update(jobManager.getAgent(jobId).getIp(), query_map);
 				break;
 				

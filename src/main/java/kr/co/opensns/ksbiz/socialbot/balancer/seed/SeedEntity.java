@@ -1,5 +1,6 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -36,17 +37,17 @@ public class SeedEntity {
 		for (Iterator<String> itr = fields.keySet().iterator(); itr.hasNext();) {
 			String fieldName = (String) itr.next();
 
-			seed.crawlCount++;
+			seed.visitCnt++;
 
 			switch (fieldName.toLowerCase()) {
 			case "cursor":
 				seed.cursor = fields.get(fieldName);
 				break;
 			case "lastcrawldate":
-				seed.lastCrawledDate = Long.parseLong(fields.get(fieldName));
+//				seed.lastCrawledDate = Long.parseLong(fields.get(fieldName));
 				break;
 			case "crawleddoccount":
-				seed.crawledDocCount += Long.parseLong(fields.get(fieldName));
+//				seed.crawledDocCount += Long.parseLong(fields.get(fieldName));
 				break;
 			default:
 				break;
@@ -56,14 +57,15 @@ public class SeedEntity {
 
 	private double getAvrUpdateTime() {
 		try {
-			return seed.lastCrawledDate - seed.firstCrawledDate / seed.crawlCount;
+			return 0;
+//			return seed.lastCrawledDate - seed.firstCrawledDate / seed.crawlCount;
 		} catch (Exception e) {
 			return 0;
 		} 
 	}
 
 	public double getPriority() {
-		return Double.parseDouble(seed.seed);
+		return Double.parseDouble(seed.seedId);
 	}
 	
 	@Override
@@ -71,55 +73,55 @@ public class SeedEntity {
 		return super.toString();
 	}
 
-	public void setSite(String site) {
-		this.seed.setSite(site);
+	public void setSiteId(int site) {
+		this.seed.setSiteId(site);
 	}
 
-	public void setSeed(String seed) {
-		this.seed.setSeed(seed);
+	public void setSeedId(String seed) {
+		this.seed.setSeedId(seed);
 	}
 
-	public void setCrawlCount(int crawlCount) {
-		this.seed.setCrawlCount(crawlCount);
+	public void setVisitCnt(int crawlCount) {
+		this.seed.setVisitCnt(crawlCount);
 	}
 
-	public void setCrawledDocCount(int crawledDocCount) {
-		this.seed.setCrawledDocCount(crawledDocCount);
+	public void setLastVisitDate(Date lastCrawlDate) {
+		this.seed.setLastVisitDate(lastCrawlDate);
 	}
 
-	public void setLastCrawlDate(long lastCrawlDate) {
-		this.seed.setLastCrawledDate(lastCrawlDate);
-	}
-
-	public void setFirstCrawlDate(long firstCrawlDate) {
-		this.seed.setFirstCrawledDate(firstCrawlDate);
+	public void setFirstVisitDate(Date firstVisitDate) {
+		this.seed.setFirstVisitDate(firstVisitDate);
 	}
 
 	public void setCursor(String cursor) {
 		this.seed.setCursor(cursor);
 	}
 
-	public void setType(String type) {
-		this.seed.setType(type);
+	public void setSeedType(int seedType) {
+		this.seed.setSeedType(seedType);
 	}
 
-	public void setCrawledDocCount(long crawledDocCount) {
-		this.seed.setCrawledDocCount(crawledDocCount);
+	public void setDocCount(int crawledDocCount) {
+		this.seed.setDocCnt(crawledDocCount);
 	}
 	
-	public String getSeed() {
-		return this.seed.getSeed();
+	public String getSeedId() {
+		return this.seed.getSeedId();
 	}
 
-	public String getSite() {
-		return this.seed.getSite();
+	public int getSiteId() {
+		return this.seed.getSiteId();
 	}
 
-	public String getType() {
-		return this.seed.getType();
+	public int getSeedType() {
+		return this.seed.getSeedType();
 	}
 
 	public String getCursor() {
 		return this.seed.getCursor();
+	}
+
+	public int getCrawlType() {
+		return this.seed.getCrlType();
 	}
 }

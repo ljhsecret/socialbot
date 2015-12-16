@@ -4,14 +4,26 @@
 
 <mapper namespace="myBatisSelectList">
 	<resultMap type="seed" id="resultMap">
-		<result property="site" column="SITE_ID" javaType="java.lang.String"/>
-		<result property="seed" column="SEED_ID" javaType="java.lang.String"/>
-		<result property="type" column="SEED_TYPE" javaType="java.lang.String"/>
-		<result property="crawlCount" column="VISIT_CNT" javaType="long"/>
-		<result property="crawledDocCount" column="DOC_CNT" javaType="long"/>
-		<result property="lastCrawledDate" column="LAST_VISIT_DATE" javaType="long"/>
-		<result property="firstCrawledDate" column="FIRST_VISIT_DATE" javaType="long"/>
+		<result property="siteId" column="SITE_ID" javaType="int"/>
+		<result property="seedId" column="SEED_ID" javaType="java.lang.String"/>
+		<result property="seedType" column="SEED_TYPE" javaType="int"/>
+		<result property="crlType" column="CRL_TYPE" javaType="int"/>
+		<result property="channelId" column="CHANNEL_ID" javaType="int"/>
 		<result property="cursor" column="CURSOR" javaType="java.lang.String"/>
+		<result property="writerName" column="WRITER_NAME" javaType="java.lang.String"/>
+		<result property="writerId" column="WRITER_ID" javaType="java.lang.String"/>
+		<result property="avgUpdTime" column="AVG_UPD_TIME" javaType="int"/>
+		<result property="visitCnt" column="VISIT_CNT" javaType="int"/>
+		<result property="docCnt" column="DOC_CNT" javaType="int"/>
+		<result property="firstVisitDate" column="FIRST_VISIT_DATE" javaType="java.util.Date"/>
+		<result property="lastVisitDate" column="LAST_VISIT_DATE" javaType="java.util.Date"/>
+		<result property="friendsCnt" column="FRIENDS_CNT" javaType="int"/>
+		<result property="firstDocDate" column="FIRST_DOC_DATE" javaType="java.util.Date"/>
+		<result property="lastDocDate" column="LAST_DOC_DATE" javaType="java.util.Date"/>
+		<result property="activeYn" column="ACTIVE_YN" javaType="java.lang.String"/>
+		<result property="location" column="LOCATION" javaType="java.lang.String"/>
+		<result property="language" column="LANGUAGE" javaType="java.lang.String"/>
+		<result property="timezone" column="TIMEZONE" javaType="java.lang.String"/>
 	</resultMap>
 	<select id="selectSeedInfo" resultMap="resultMap">
 		SELECT *

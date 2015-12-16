@@ -32,16 +32,16 @@ public class SeedQueue {
 
 	Map<String, SeedEntity> bufMap = new HashMap<String, SeedEntity>();
 
-	String type;
+	int type;
 
-	public SeedQueue(String type) {
+	public SeedQueue(int type) {
 		this.logger = Logger.getLogger(this.getClass());
 		this.type = type;
 	}
 
 	public void put(SeedEntity seed) {
 		synchronized (this) {
-			seed.setType(type);
+			seed.setSeedType(type);
 			queue.put(seed);
 		}
 	}
@@ -66,7 +66,7 @@ public class SeedQueue {
 			SeedEntity seed;
 			try {
 				seed = queue.take();
-				bufMap.put(seed.getSeed(), seed);
+				bufMap.put(seed.getSeedId(), seed);
 				logger.info("QUEUE SIZE : " + queue.size());
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -78,7 +78,7 @@ public class SeedQueue {
 		}
 	}
 	
-	public String getType(){
+	public int getType(){
 		return type;
 	}
 	

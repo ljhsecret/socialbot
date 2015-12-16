@@ -101,7 +101,7 @@ public class SeedManager implements Manager {
 		SeedEntity seed = queueMap.get(site).take();
 		TOTAL_JOB_COUNT++;
 		jobCountPerSite.put(site, jobCountPerSite.get(site) + 1);
-		logger.info("GET SEED : site - " + site + ", seed - " + seed.getSeed()
+		logger.info("GET SEED : site - " + site + ", seed - " + seed.getSeedId()
 				+ ", priority - " + seed.getPriority());
 		return seed;
 	}
@@ -159,7 +159,7 @@ public class SeedManager implements Manager {
 					| IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException e) {
 				// e.printStackTrace();
-				logger.info("SeedQueue Load fail");
+				logger.info("SeedQueue Load fail : " + e.getMessage());
 			}
 		}
 	}

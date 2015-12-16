@@ -51,7 +51,19 @@ public class ConnectionFactory {
 	public void insertSeedInfo(HashMap<String, String> seed) {
 		SqlSession session = sqlMapper.openSession();
 		try {
-			session.insert(NAME_SPACE_MANAGE + "insertSeedInfo", seed);
+			session.insert(NAME_SPACE_MANAGE + "insertSeedInfoWithMap", seed);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			session.commit();
+			session.close();
+		}
+	}
+	
+	public void insertSeedInfo(SeedDO seed) {
+		SqlSession session = sqlMapper.openSession();
+		try {
+			session.insert(NAME_SPACE_MANAGE + "insertSeedInfoWithDO", seed);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -63,7 +75,19 @@ public class ConnectionFactory {
 	public void updateSeedInfo(HashMap<String, String> seed) {
 		SqlSession session = sqlMapper.openSession();
 		try {
-			session.update(NAME_SPACE_MANAGE + "updateSeedInfo", seed);
+			session.update(NAME_SPACE_MANAGE + "updateSeedInfowWithMap", seed);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			session.commit();
+			session.close();
+		}
+	}
+	
+	public void updateSeedInfo(SeedDO seed) {
+		SqlSession session = sqlMapper.openSession();
+		try {
+			session.update(NAME_SPACE_MANAGE + "updateSeedInfoWithDO", seed);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
