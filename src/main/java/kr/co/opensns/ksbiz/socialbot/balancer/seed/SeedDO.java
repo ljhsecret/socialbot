@@ -143,5 +143,29 @@ public class SeedDO {
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 	}
-
+	public SeedDO(String seedId, int siteId, int seedType, int crlType,
+			int channelId, String cursor, String writerName, String writerId,
+			Date firstVisitDate, int friendsCnt, Date firstDocDate,
+			String activeYn, String location, String language, String timezone) {
+		super();
+		this.seedId = seedId;
+		this.siteId = siteId;
+		this.seedType = seedType;
+		this.crlType = crlType;
+		this.channelId = channelId;
+		this.cursor = cursor;
+		this.writerName = writerName;
+		this.writerId = writerId;
+		this.firstVisitDate = firstVisitDate;
+		this.friendsCnt = friendsCnt;
+		this.firstDocDate = firstDocDate;
+		this.activeYn = activeYn;
+		this.location = location;
+		this.language = language;
+		this.timezone = timezone;
+	}
+	public SeedDO() {
+		super();
+	}
+	
 }
