@@ -8,7 +8,7 @@
 		<result property="seedType" column="SEED_TYPE" javaType="int" />
 		<result property="crlType" column="CRL_TYPE" javaType="int" />
 		<result property="channelId" column="CHANNEL_ID" javaType="int" />
-		<result property="cursor" column="CURSOR" javaType="java.lang.String" />
+		<result property="cursor" column="CUR" javaType="java.lang.String" />
 		<result property="writerName" column="WRITER_NAME" javaType="java.lang.String" />
 		<result property="writerId" column="WRITER_ID" javaType="java.lang.String" />
 		<result property="avgUpdTime" column="AVG_UPD_TIME" javaType="int" />
@@ -24,7 +24,7 @@
 		<result property="lastDocDate" column="LAST_DOC_DATE" javaType="java.util.Date" />
 		<result property="activeYn" column="ACTIVE_YN" javaType="java.lang.String" />
 		<result property="location" column="LOCATION" javaType="java.lang.String" />
-		<result property="language" column="LANGUAGE" javaType="java.lang.String" />
+		<result property="language" column="LANG" javaType="java.lang.String" />
 		<result property="timezone" column="TIMEZONE" javaType="java.lang.String" />
 	</resultMap>
 	<insert id="insertSeedInfoWithDO" parameterType="seed">
@@ -34,7 +34,7 @@
 			SITE_ID,
 			SEED_TYPE,
 			CRL_TYPE,
-			CURSOR,
+			CUR,
 			CHANNEL_ID,
 			WRITER_NAME,
 			WRITER_ID,
@@ -42,16 +42,16 @@
 			FIRST_DOC_DATE,
 			FRIENDS_CNT,
 			ACTIVE_YN,
-			LANGUAGE,
+			LANG,
 			LOCATION,
-			TIMEZONE,
+			TIMEZONE
 		)
 		VALUES
 		(
 			#{seedId, jdbcType=VARCHAR},
 			#{siteId, jdbcType=INTEGER},
 			#{seedType, jdbcType=INTEGER},
-			#{crawlType, jdbcType=INTEGER},
+			#{crlType, jdbcType=INTEGER},
 			#{cursor, jdbcType=VARCHAR},
 			#{channelId, jdbcType=INTEGER},
 			#{writerName, jdbcType=VARCHAR},
@@ -73,7 +73,7 @@
 			SITE_ID,
 			SEED_TYPE,
 			CRL_TYPE,
-			CURSOR,
+			CUR,
 			CHANNEL_ID,
 			WRITER_NAME,
 			WRITER_ID,
@@ -81,16 +81,16 @@
 			FIRST_DOC_DATE,
 			FRIENDS_CNT,
 			ACTIVE_YN,
-			LANGUAGE,
+			LANG,
 			LOCATION,
-			TIMEZONE,
+			TIMEZONE
 		)
 		VALUES
 		(
 			#{seedId, jdbcType=VARCHAR},
 			#{siteId, jdbcType=INTEGER},
 			#{seedType, jdbcType=INTEGER},
-			#{crawlType, jdbcType=INTEGER},
+			#{crlType, jdbcType=INTEGER},
 			#{cursor, jdbcType=VARCHAR},
 			#{channelId, jdbcType=INTEGER},
 			#{writerName, jdbcType=VARCHAR},
@@ -111,8 +111,9 @@
 			<if test="lastVisitDate != null">LAST_VISIT_DATE=#{lastVisitDate},</if>
 			<if test="lastDocDate != null">LAST_DOC_DATE=#{lastDocDate},</if>
 			<if test="friendsCnt != null">FRIENDS_CNT=#{friendsCnt},</if>
+			<if test="cursor != null">CUR=#{cursor},</if>
 			<if test="visitCnt != null">VISIT_CNT=#{visitCnt},</if>
-			<if test="docCnt != null">DOC_CND=#={docCnt},</if>
+			<if test="docCnt != null">DOC_CNT=#{docCnt},</if>
 			<if test="avgUpdTime != null">AVG_UPD_TIME=#{avgUpdTime}</if>
 		</set>
 		WHERE SEED_ID=#{seedId}
@@ -125,8 +126,9 @@
 			<if test="lastVisitDate != null">LAST_VISIT_DATE=#{lastVisitDate},</if>
 			<if test="lastDocDate != null">LAST_DOC_DATE=#{lastDocDate},</if>
 			<if test="friendsCnt != null">FRIENDS_CNT=#{friendsCnt},</if>
+			<if test="cursor != null">CUR=#{cursor},</if>
 			<if test="visitCnt != null">VISIT_CNT=#{visitCnt},</if>
-			<if test="docCnt != null">DOC_CND=#={docCnt},</if>
+			<if test="docCnt != null">DOC_CNT=#{docCnt},</if>
 			<if test="avgUpdTime != null">AVG_UPD_TIME=#{avgUpdTime}</if>
 		</set>
 		WHERE SEED_ID=#{seedId}
