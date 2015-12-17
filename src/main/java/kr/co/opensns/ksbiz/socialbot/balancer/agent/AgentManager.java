@@ -16,6 +16,7 @@ import java.util.Map;
 
 import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.Manager;
+import kr.co.opensns.ksbiz.socialbot.balancer.exception.BalancerException;
 
 import org.apache.log4j.Logger;
 
@@ -151,8 +152,12 @@ public class AgentManager implements Manager {
 	@Override
 	public void update(String key, Map<String, String> fields) {
 		synchronized (AgentManager.class) {
-			fields.get("status");
-			fields.get("Processing Time");
+			fields.put("ip", key);
+			try {
+				agentQueue.update(fields);
+			} catch (BalancerException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

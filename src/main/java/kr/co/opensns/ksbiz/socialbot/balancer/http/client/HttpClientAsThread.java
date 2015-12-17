@@ -244,7 +244,7 @@ public class HttpClientAsThread implements Runnable {
 			// ---------------------------------------------------------
 			// Make post method ...
 			// ---------------------------------------------------------
-			// PostMethod method = make_post_method(uri, params);
+//			 PostMethod method = make_post_method(uri, params);
 			GetMethod method = make_get_method(uri, params);
 
 			if (method == null)

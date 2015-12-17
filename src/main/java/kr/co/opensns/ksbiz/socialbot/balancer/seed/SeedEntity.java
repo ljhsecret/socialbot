@@ -40,7 +40,7 @@ public class SeedEntity {
 			seed.visitCnt++;
 
 			switch (fieldName.toLowerCase()) {
-			case "cursor":
+			case "lastDocId":
 				seed.cursor = fields.get(fieldName);
 				break;
 			case "lastcrawldate":
@@ -57,8 +57,7 @@ public class SeedEntity {
 
 	private double getAvrUpdateTime() {
 		try {
-			return 0;
-//			return seed.lastCrawledDate - seed.firstCrawledDate / seed.crawlCount;
+			return (seed.lastVisitDate.getTime()/1000L - seed.firstVisitDate.getTime()/1000L) / seed.docCnt;
 		} catch (Exception e) {
 			return 0;
 		} 

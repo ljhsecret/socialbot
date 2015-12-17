@@ -1,7 +1,5 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.agent;
 
-import kr.co.opensns.ksbiz.socialbot.balancer.BalancerObject;
-
 /**
  * 클래스 설명
  *
@@ -17,16 +15,12 @@ import kr.co.opensns.ksbiz.socialbot.balancer.BalancerObject;
  *
  */
 
-public class AgentInfo implements BalancerObject {
-	private long jobCount;
+public class AgentInfo {
 	private String ip;
 	private String port;
 	private static int MAX_JOB_COUNT = 5;
-
-	enum State {
-		ALIVE, DEAD
-	};
-
+	
+	private long jobCount;
 	private State status;
 	private long avrJobProcessingTime;
 	private long lastWorkingTime;
@@ -35,8 +29,16 @@ public class AgentInfo implements BalancerObject {
 		return "http://" + ip + ":" + port + "/" + context + "/";
 	}
 
+	public boolean isAlive(){
+		return status.equals(State.ALIVE);
+	}
+	
+	public void dead(){
+		this.status = State.DEAD; 
+	}
+	
 	public double getPriority() {
-		if(jobCount == MAX_JOB_COUNT)
+		if(jobCount == MAX_JOB_COUNT || !isAlive())
 			return Double.MAX_VALUE;
 		return jobCount * 100000000 + avrJobProcessingTime;
 	}
@@ -88,14 +90,12 @@ public class AgentInfo implements BalancerObject {
 	public String toCSV(){
 		return ip+","+port+","+lastWorkingTime+","+jobCount+","+avrJobProcessingTime;
 	}
-
-	@Override
-	public void update(BalancerObject bo) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	public State getStatus(){
 		return status;
 	}
+	
+	enum State {
+		ALIVE, DEAD
+	};
 }

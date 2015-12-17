@@ -3,6 +3,7 @@ package kr.co.opensns.ksbiz.socialbot.balancer.agent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -71,18 +72,35 @@ public class PriorityTable {
 	public void update(Map<String, String> fields) throws BalancerException {
 		synchronized (PriorityTable.class) {
 			String ip = fields.get("ip");
-
+			map.remove(ip);
 			if (!map.containsKey(ip)) {
 				throw new BalancerException("not exist agent(ip:" + ip
 						+ " into map");
 			}
-
-//			AgentInfo agent = map.get(ip);
-
-			map.remove(ip);
-
-			// agent.setJobCount();
-
+			
+			AgentInfo agent = map.get(ip);
+			switch (fields.get("StatusCode")) {
+			case "00":
+				long processingTime = Long.parseLong(fields.get("elapsedTime"));
+				long avrJobProcessingTime = agent.getAvrJobProcessingTime();
+				long jobCount = agent.getJobCount();
+				
+				avrJobProcessingTime = (avrJobProcessingTime*jobCount+processingTime)/(jobCount+1);
+				
+				agent.setAvrJobProcessingTime(avrJobProcessingTime);
+				agent.setJobCount(jobCount+1);
+				agent.setLastWorkingTime(new Date().getTime()/1000L);
+				
+				map.put(ip,agent);
+				
+				break;
+			case "01":
+				agent.dead();
+				map.put(ip, agent);
+			default:
+				break;
+			}
+			
 			sort();
 		}
 	}

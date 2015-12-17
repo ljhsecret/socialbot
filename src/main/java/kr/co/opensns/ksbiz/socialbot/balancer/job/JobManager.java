@@ -201,9 +201,21 @@ public class JobManager implements Manager {
 	@Override
 	public void update(String key, Map<String, String> fields) {
 		String jobId = key;
-
+		String resultCode = fields.get("StatusCode");
+		
 		try {
-			jobTable.update(jobId, JobStatus.DONE);
+			switch (resultCode) {
+			case "01":
+				jobTable.update(jobId, JobStatus.DONE);
+				break;
+			case "02":
+				jobTable.update(jobId, JobStatus.ERROR);
+				break;
+
+			default:
+				break;
+			}
+			
 		} catch (SharedJobTableException e) {
 			e.printStackTrace();
 		}

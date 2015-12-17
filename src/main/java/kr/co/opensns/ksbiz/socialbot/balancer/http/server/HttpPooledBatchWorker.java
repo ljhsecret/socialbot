@@ -46,7 +46,6 @@ public class HttpPooledBatchWorker extends HttpPooledWorker
 		
 		System.out.println(query_map);
 		
-		
 		try
 		{
 			exchange.sendResponseHeaders(200, 0);

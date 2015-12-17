@@ -166,7 +166,16 @@ public class SeedManager implements Manager {
 
 	@Override
 	public void update(String key, Map<String, String> fields) {
-
+		String[] tmp = key.split("-");
+		String site = tmp[0];
+		String seedId = tmp[1];
+		
+		try {
+			queueMap.get(site).update(seedId, fields);
+		} catch (BalancerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
