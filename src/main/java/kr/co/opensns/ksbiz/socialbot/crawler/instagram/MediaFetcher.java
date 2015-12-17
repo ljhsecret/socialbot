@@ -61,8 +61,6 @@ public class MediaFetcher extends ApiFetcher {
 	    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 	    .create();
 		Medias medias = gson.fromJson(jsonStr, Medias.class);
-		System.out.println(medias.getData().get(0).getComments().getCount());
-		System.out.println(medias.getData().get(1).getLikes().toString());
 		return medias;
 	}
 	

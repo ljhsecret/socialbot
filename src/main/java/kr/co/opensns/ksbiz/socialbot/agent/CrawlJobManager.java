@@ -19,8 +19,8 @@ import kr.co.opensns.ksbiz.socialbot.schedule.RequestHandler;
 public class CrawlJobManager implements Runnable{
 	public static int MAX_JOB_COUNT = 20;
 	private Logger logger = Logger.getLogger(this.getClass());
-	private int jobCount = 0;
 	private List<Thread> jobThreads = new ArrayList<Thread>();
+	private JobThreadCounter jobThreadCounter = new JobThreadCounter();
 	@Override
 	public void run() {
 		manageJob();
@@ -30,20 +30,19 @@ public class CrawlJobManager implements Runnable{
 		while(true) {
 			waitForJob();
 			Job job = RequestHandler.getInstance().getOneJob();
-			Thread thread = new Thread(new Crawler(job));
+			Thread thread = new Thread(new Crawler(job, jobThreadCounter));
 			thread.start();
 			jobThreads.add(thread);
 			System.out.println("New Crawl job added. the job id: " + job.getJobId() + ", site id: " + job.getSiteId() + ", seed: " + job.getSeed());
-			System.out.println("Current job count: " + jobThreads.size());
 		}
 	}
 	
 	public void waitForJob() {
 		
-		while( ( jobThreads.size() >= MAX_JOB_COUNT ) || ( ! RequestHandler.getInstance().hasAJob()) ) {
+		while( ( jobThreadCounter.getCount() >= MAX_JOB_COUNT ) || ( ! RequestHandler.getInstance().hasAJob()) ) {
 			try {
 				Thread.sleep(5000);
-				System.out.println("Wait for job");
+				System.out.println("Wait for job. Job thread count: " + jobThreadCounter.getCount() + ", Job Queue size: " + RequestHandler.getInstance().getQueue().size());
 			} catch (InterruptedException e) {
 			}
 		}
