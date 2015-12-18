@@ -25,9 +25,11 @@
 		<result property="language" column="LANG" javaType="java.lang.String"/>
 		<result property="timezone" column="TIMEZONE" javaType="java.lang.String"/>
 	</resultMap>
-	<select id="selectSeedInfo" resultMap="resultMap">
+	<select id="selectSeedInfo" parameterType="hMap" resultMap="resultMap">
 		SELECT *
 		FROM seed_info
+		WHERE SEED_TYPE=#{type}
+		AND SITE_ID=#{siteId}
 	</select>
 	<!-- <select id="selectSeedInfo" resultType="hMap" parameterType="int"> 
 		SELECT * FROM seed_info </select> -->

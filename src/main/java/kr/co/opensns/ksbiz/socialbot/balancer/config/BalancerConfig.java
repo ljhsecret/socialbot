@@ -1,4 +1,4 @@
-package kr.co.opensns.ksbiz.socialbot.balancer;
+package kr.co.opensns.ksbiz.socialbot.balancer.config;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,7 +26,7 @@ public class BalancerConfig {
 	private String resultDir;
 	private String targetDir;
 	
-	private List<HashMap<String,String>> seedInfoList;
+	private List<SeedConfig> seedInfoList;
 	private List<HashMap<String,String>> agentInfoList;
 	
 	private HashMap<String,String> jobWeight;
@@ -34,19 +34,19 @@ public class BalancerConfig {
 	Logger logger;
 
 	public BalancerConfig() {
-		// TODO Auto-generated constructor stub
-		configFilePath = CONF_DEFAULT_PATH;
-		init();
+		this(null);
 	}
 	
 	public BalancerConfig(String configXml) {
-		// TODO Auto-generated constructor stub
-		configFilePath = configXml;
+		if(configXml==null)
+			configFilePath = CONF_DEFAULT_PATH;
+		else
+			configFilePath = configXml;
 		init();
 	}
 
 	private void init() {
-		seedInfoList = new ArrayList<HashMap<String,String>>();
+		seedInfoList = new ArrayList<SeedConfig>();
 		agentInfoList = new ArrayList<HashMap<String,String>>();
 		
 		Element element;
@@ -67,15 +67,18 @@ public class BalancerConfig {
 			List<Element> subElements = (List<Element>) element.getChildren();
 			
 			for(Element e : subElements){
-				HashMap<String,String> configMap = new HashMap<String,String>();
-				configMap.put("channel", e.getChild("channel").getValue());
-				configMap.put("site", e.getChild("site").getValue());
-				configMap.put("repository", e.getChild("repository").getValue());
-				configMap.put("weight", e.getChild("weight").getValue());
-				configMap.put("type", e.getChild("type").getValue());
-				configMap.put("result-type", e.getChild("result-type").getValue());
-				configMap.put("path", e.getChild("path").getValue());
-				seedInfoList.add(configMap);
+				SeedConfig seedConf = new SeedConfig();
+				
+				seedConf.setChannel(e.getChild("channel").getValue());
+				seedConf.setSite(e.getChild("site").getValue());
+				seedConf.setSeedType(e.getChild("type").getValue());
+				seedConf.setContentsType(e.getChild("contents-type").getValue());
+				seedConf.setCrawlWeight(e.getChild("weight").getValue());
+				seedConf.setCrlType(e.getChild("crawl-type").getValue());
+				seedConf.setRepository(e.getChild("repository").getChild("type").getValue());
+				seedConf.setRepositoryPath(e.getChild("repository").getChild("path").getValue());
+				
+				seedInfoList.add(seedConf);
 			}
 			
 			element = (Element) (XPath.selectSingleNode(doc, "/balancer/agent-info"));
@@ -96,7 +99,7 @@ public class BalancerConfig {
 		}
 	}
 	
-	public List<HashMap<String,String>> getSeedConfig(){
+	public List<SeedConfig> getSeedConfig(){
 		return this.seedInfoList;
 	}
 	
@@ -109,12 +112,10 @@ public class BalancerConfig {
 	}
 
 	public String getResultDir() {
-		// TODO Auto-generated method stub
 		return resultDir;
 	}
 	
 	public String getTargetDir() {
-		// TODO Auto-generated method stub
 		return targetDir;
 	}
 }

@@ -1,6 +1,7 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 /**
  * 클래스 설명
@@ -35,13 +36,13 @@ public class SeedLoader<L extends Loadable> {
 		// }
 	}
 
-	public SeedQueue LoadSeedQueue(String path, String type)
+	public SeedQueue LoadSeedQueue(String path, HashMap<String,String> fields)
 			throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException {
 		SeedQueue q = null;
 		L loader = cls.getConstructor().newInstance();
-		q = loader.Load(path, type);
+		q = loader.Load(path, fields);
 		cls.getName();
 		return q;
 	}

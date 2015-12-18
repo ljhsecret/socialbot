@@ -8,8 +8,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.Manager;
+import kr.co.opensns.ksbiz.socialbot.balancer.config.BalancerConfig;
+import kr.co.opensns.ksbiz.socialbot.balancer.config.SeedConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.BalancerException;
 
 /**
@@ -31,10 +32,9 @@ public class SeedManager implements Manager {
 
 	private static SeedManager instance;
 	private HashMap<String, SeedQueue> queueMap;
-	@SuppressWarnings("rawtypes")
-	private SeedLoader loader;
+	private SeedLoader<?> loader;
 	private Logger logger;
-	private List<HashMap<String, String>> seedConfig;
+	private List<SeedConfig> seedConfList;
 
 	private Map<String, Double> weightPerSite;
 	private Map<String, Integer> jobCountPerSite;
@@ -69,7 +69,7 @@ public class SeedManager implements Manager {
 			logger.info("Configuration setting was not complete");
 			return;
 		}
-		seedConfig = conf.getSeedConfig();
+		seedConfList = conf.getSeedConfig();
 
 		initWeightValue();
 		try {
@@ -80,14 +80,14 @@ public class SeedManager implements Manager {
 	}
 
 	private void initWeightValue() {
-		for (HashMap<String, String> map : seedConfig) {
-			int weight = Integer.parseInt(map.get("weight"));
+		for (SeedConfig seedConf : seedConfList) {
+			int weight = Integer.parseInt(seedConf.getCrawlWeight());
 			sumOfWeight += weight;
 		}
 
-		for (HashMap<String, String> map : seedConfig) {
-			String key = map.get("site") + "-" + map.get("type");
-			int weight = Integer.parseInt(map.get("weight"));
+		for (SeedConfig seedConf: seedConfList) {
+			String key = seedConf.getSite() + "-" + seedConf.getSeedType();
+			int weight = Integer.parseInt(seedConf.getCrawlWeight());
 
 			double rate = (double) weight / sumOfWeight;
 
@@ -131,8 +131,8 @@ public class SeedManager implements Manager {
 
 	@Override
 	public void load() throws BalancerException {
-		for (HashMap<String, String> map : seedConfig) {
-			String repository = map.get("repository");
+		for (SeedConfig seedConf : seedConfList) {
+			String repository = seedConf.getRepository();
 			if (repository == null)
 				throw new BalancerException("seed repository is empty");
 
@@ -148,17 +148,23 @@ public class SeedManager implements Manager {
 
 			SeedQueue q;
 			try {
-				String path = map.get("path");
-				String site = map.get("site");
-				String type = map.get("type");
-				String key = site + "-" + type;
-				q = loader.LoadSeedQueue(path, key);
+				String path = seedConf.getRepositoryPath();
+				String seedType = seedConf.getSeedType();
+				String site = seedConf.getSite();
+				String key = site+"-"+seedType;
+				
+				HashMap<String,String> fields = new HashMap<String,String>();
+				
+				fields.put("type", seedType);
+				fields.put("siteId", site);
+				
+				q = loader.LoadSeedQueue(path, fields);
 				queueMap.put(key, q);
 				logger.info("SeedQueue Load done : " + key);
 			} catch (InstantiationException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException e) {
-				// e.printStackTrace();
+				 e.printStackTrace();
 				logger.info("SeedQueue Load fail : " + e.getMessage());
 			}
 		}

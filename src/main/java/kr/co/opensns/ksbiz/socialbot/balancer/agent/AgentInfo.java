@@ -24,6 +24,10 @@ public class AgentInfo {
 	private State status;
 	private long avrJobProcessingTime;
 	private long lastWorkingTime;
+	
+	public AgentInfo(){
+		status = State.ALIVE;
+	}
 
 	public String url(String context) {
 		return "http://" + ip + ":" + port + "/" + context + "/";

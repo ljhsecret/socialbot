@@ -64,7 +64,7 @@ public class SeedEntity {
 	}
 
 	public double getPriority() {
-		return Double.parseDouble(seed.seedId);
+		return 0;
 	}
 	
 	@Override

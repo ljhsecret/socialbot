@@ -29,10 +29,7 @@ public class JobEntity {
 	private int crawlType;
 	private String contentType;
 	
-	
 	JobStatus status;
-	
-	
 	
 	public JobEntity(){
 		this(null,null);
@@ -42,6 +39,10 @@ public class JobEntity {
 	
 	public void setStatus(JobStatus status){
 		this.status = status;
+	}
+	
+	public JobStatus getStatus(){
+		return status;
 	}
 	
 	public JobEntity(SeedEntity seed, AgentInfo agent){

@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.Manager;
+import kr.co.opensns.ksbiz.socialbot.balancer.config.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.BalancerException;
 
 import org.apache.log4j.Logger;

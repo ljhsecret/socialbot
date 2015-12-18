@@ -1,6 +1,7 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -13,25 +14,6 @@ public class DBSeedLoader extends Loadable {
 
 	public DBSeedLoader() {
 		cf = new ConnectionFactory();
-	}
-
-	@Override
-	SeedQueue Load(String path, String type) {
-		SeedQueue queue = new SeedQueue(01);
-
-/*		List<Map<String, Object>> results = cf.selectSeedInfo();
-		// System.out.println(results);
-		for (Map<String, Object> result : results) {
-			queue.put(MapToSeedEntity(result));
-		}*/
-		
-		List<SeedDO> results = cf.selectSeedInfo();
-
-		for (SeedDO result : results) {
-			queue.put(new SeedEntity(result));
-		}
-
-		return queue;
 	}
 
 	private SeedEntity MapToSeedEntity(Map<String, Object> map) {
@@ -73,4 +55,22 @@ public class DBSeedLoader extends Loadable {
 		return seed;
 	}
 
+	@Override
+	SeedQueue Load(String path, HashMap<String, String> fields) {
+		SeedQueue queue = new SeedQueue(01);
+
+/*		List<Map<String, Object>> results = cf.selectSeedInfo();
+		// System.out.println(results);
+		for (Map<String, Object> result : results) {
+			queue.put(MapToSeedEntity(result));
+		}*/
+		
+		List<SeedDO> results = cf.selectSeedInfo(fields);
+
+		for (SeedDO result : results) {
+			queue.put(new SeedEntity(result));
+		}
+
+		return queue;	
+	}
 }
