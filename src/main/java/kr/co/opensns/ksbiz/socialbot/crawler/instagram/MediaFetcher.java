@@ -71,7 +71,8 @@ public class MediaFetcher extends ApiFetcher {
 		
 		String jsonStr = httpClient.getResponseString(url);
 		
-		if( jsonStr == null ) throw new FetchException();
+		if( jsonStr == null ) 
+			throw new FetchException();
 		
 		Gson gson = new GsonBuilder()
 	    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
