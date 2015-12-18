@@ -2,6 +2,7 @@ package kr.co.opensns.ksbiz.socialbot.balancer;
 
 import java.util.Map;
 
+import kr.co.opensns.ksbiz.socialbot.balancer.config.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.BalancerException;
 
 public interface Manager {

@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
@@ -31,9 +32,9 @@ public class FileSeedLoader extends Loadable{
 	public FileSeedLoader(){
 		logger = Logger.getLogger(this.getClass());
 	}
-	
+
 	@Override
-	public SeedQueue Load(String path, String type) {
+	SeedQueue Load(String path, HashMap<String, String> fields) {
 		SeedQueue q = new SeedQueue(00);
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(path))));

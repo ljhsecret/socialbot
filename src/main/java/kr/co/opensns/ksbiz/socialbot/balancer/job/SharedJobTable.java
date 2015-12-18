@@ -59,8 +59,8 @@ public class SharedJobTable {
 
 				if (status == JobStatus.ERROR) {
 					SharedJobTable.remove(jobId);
-					// logger.info("An error has occurred on the job : Job ID - "
-					// +jobId);
+					logger.info("An error has occurred on the job : Job ID - "
+					 +jobId);
 					return;
 				}
 

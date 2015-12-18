@@ -37,17 +37,18 @@ import org.apache.log4j.Logger;
  *
  */
 
-public class HttpClientAsThread implements Runnable {
+public class JobRequestThread implements Runnable {
 	HttpStatusListener listener;
 	JobEntity job;
+	HttpClient httpClient;
 	static Logger logger;
 
 	static {
-		logger = Logger.getLogger(HttpClientAsThread.class);
+		logger = Logger.getLogger(JobRequestThread.class);
 	}
 
-	public HttpClientAsThread() {
-
+	public JobRequestThread() {
+		httpClient = buildClient();
 	}
 
 	public void setHttpStatusListener(HttpStatusListener listener) {
@@ -58,7 +59,7 @@ public class HttpClientAsThread implements Runnable {
 		this.job = job;
 	}
 
-	public HttpClient initClient() {
+	public HttpClient buildClient() {
 		HttpClient client = new HttpClient();
 		client.getParams().setParameter("http.useragent", "BALANCER");
 		client.getParams().setContentCharset("UTF-8");
@@ -74,7 +75,7 @@ public class HttpClientAsThread implements Runnable {
 	 *            사용자 요청을 저장하고 있는 map
 	 * @return PostMethod
 	 */
-	public PostMethod make_post_method(String uri, Map<String, String> params) {
+	public PostMethod buildPostMethod(String uri, Map<String, String> params) {
 		PostMethod method = new PostMethod(uri);
 
 		if (params == null)
@@ -100,7 +101,7 @@ public class HttpClientAsThread implements Runnable {
 		return method;
 	}
 
-	public GetMethod make_get_method(String uri, Map<String, String> params) {
+	public GetMethod buildGetMethod(String uri, Map<String, String> params) {
 		GetMethod method = new GetMethod(uri);
 
 		if (params == null)
@@ -145,12 +146,12 @@ public class HttpClientAsThread implements Runnable {
 	 *            사용자 요청을 저장하고 있는 PostMethod
 	 * @return 서버로 부터 받은 응답
 	 */
-	public String send_and_get_response(HttpClient client, PostMethod method) {
+	public String getResponseString(PostMethod method) {
 		BufferedReader br = null;
 		StringBuffer sb = new StringBuffer();
 
 		try {
-			int returnCode = client.executeMethod(method);
+			int returnCode = httpClient.executeMethod(method);
 
 			if (returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
 				System.err
@@ -169,7 +170,7 @@ public class HttpClientAsThread implements Runnable {
 
 		} catch (Exception e) {
 			if (e instanceof java.net.ConnectException) {
-				listener.onRequestTimeout(JobStatus.ERROR);
+				listener.onRequestTimeout(new JobRequestEvent(job));
 			}
 			return null;
 		} finally {
@@ -186,13 +187,13 @@ public class HttpClientAsThread implements Runnable {
 		return sb.toString();
 	}
 
-	public String send_and_get_response(HttpClient client, GetMethod method) {
+	public String getResponseString(GetMethod method) {
 		BufferedReader br = null;
 		StringBuffer sb = new StringBuffer();
 
 		try {
-			int returnCode = client.executeMethod(method);
-			listener.onSendRequestToAgent(JobStatus.READY);
+			int returnCode = httpClient.executeMethod(method);
+			listener.onSendRequestToAgent(new JobRequestEvent(job));
 			// listener.onSendRequestToAgent(job);
 
 			if (returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
@@ -212,7 +213,7 @@ public class HttpClientAsThread implements Runnable {
 		} catch (Exception e) {
 			// e.printStackTrace();
 			if (e instanceof java.net.ConnectException) {
-				listener.onRequestTimeout(JobStatus.ERROR);
+				listener.onRequestTimeout(new JobRequestEvent(job));
 			}
 			return null;
 		} finally {
@@ -237,15 +238,13 @@ public class HttpClientAsThread implements Runnable {
 			// -------------------------------------------------------
 			// Client Initialize ...
 			// -------------------------------------------------------
-			HttpClient httpClient = initClient();
-
 			HashMap<String, String> params = (HashMap<String, String>) MapParser.convertMap(job);
 
 			// ---------------------------------------------------------
 			// Make post method ...
 			// ---------------------------------------------------------
-			// PostMethod method = make_post_method(uri, params);
-			GetMethod method = make_get_method(uri, params);
+//			 PostMethod method = make_post_method(uri, params);
+			GetMethod method = buildGetMethod(uri, params);
 
 			if (method == null)
 				return;
@@ -253,17 +252,16 @@ public class HttpClientAsThread implements Runnable {
 			// -------------------------------------------------------
 			// wait for response ...
 			// -------------------------------------------------------
-			String result = send_and_get_response(httpClient, method);
+			String result = getResponseString(method);
 
 			if (result == null)
 				throw new Exception("response error");
 
-			listener.onGetResponseFromAgent(JobStatus.DONE);
+			listener.onGetResponseFromAgent(new JobRequestEvent(job));
 
 			System.out.println(result);
 		} catch (Exception e) {
 			logger.info(e.getMessage());
-			// listener.onGetResponseFromAgent(JobStatus.ERROR);
 		}
 	}
 }

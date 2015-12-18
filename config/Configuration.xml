@@ -12,21 +12,28 @@
 		<seed>
 			<channel>sns</channel>
 			<site>instagram</site>
-			<repository>db</repository>
-			<path>config/Seeds2.csv</path>
+			<repository>
+				<type>db</type>
+				<path>seed_info</path>
+			</repository>
 			<weight>3</weight>
-			<type>id</type>
-			<result-type>json</result-type>
+			<type>docid</type>
+			<crawl-type>media</crawl-type>
+			<contents-type>json</contents-type>
 		</seed>
+		
 		<!-- 
  		<seed>
-			<channel>sns</channel>
+ 			<channel>sns</channel>
 			<site>twitter</site>
-			<repository>local</repository>
-			<path>config/Seeds.csv</path>
+			<repository>
+				<type>local</type>
+				<path>config/Seeds.csv</path>
+			</repository>
 			<weight>2</weight>
 			<type>id</type>
-			<result-type>json</result-type>
+			<crawl-type>media</crawl-type>
+			<contents-type>json</contents-type>
 		</seed>
 		 --> 
 	</seed-info>

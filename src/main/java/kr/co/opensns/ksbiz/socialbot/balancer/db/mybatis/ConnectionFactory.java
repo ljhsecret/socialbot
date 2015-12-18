@@ -36,11 +36,11 @@ public class ConnectionFactory {
 		return hmap;
 	}*/
 	
-	public List<SeedDO> selectSeedInfo() {
+	public List<SeedDO> selectSeedInfo(HashMap<String, String> fields) {
 		SqlSession session = sqlMapper.openSession();
 		List<SeedDO> hmap = null;
 		try {
-			hmap = session.selectList(NAME_SPACE_SELECT + "selectSeedInfo");
+			hmap = session.selectList(NAME_SPACE_SELECT + "selectSeedInfo", fields);
 		} finally {
 			session.commit();
 			session.close();

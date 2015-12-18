@@ -13,12 +13,13 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.annotations.Until;
 
-import kr.co.opensns.ksbiz.socialbot.balancer.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.Manager;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentManager;
+import kr.co.opensns.ksbiz.socialbot.balancer.config.BalancerConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.SharedJobTableException;
-import kr.co.opensns.ksbiz.socialbot.balancer.http.client.HttpClientAsThread;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.client.JobRequestEvent;
+import kr.co.opensns.ksbiz.socialbot.balancer.http.client.JobRequestThread;
 import kr.co.opensns.ksbiz.socialbot.balancer.http.client.HttpStatusListener;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedManager;
@@ -85,15 +86,9 @@ public class JobManager implements Manager {
 
 			@Override
 			public void onCompleteJob(JobEntity job) {
-
+				
 			}
 		});
-
-		// agentManager = AgentManager.getInstance();
-		// agentManager.setConfig(conf);
-		//
-		// seedManager = SeedManager.getinstance();
-		// seedManager.setConfig(conf);
 	}
 
 	public int checkRequireJob() {
@@ -124,32 +119,32 @@ public class JobManager implements Manager {
 	}
 
 	public void doJob(final JobEntity job) {
-		HttpClientAsThread client;
-		client = new HttpClientAsThread();
+		JobRequestThread client;
+		client = new JobRequestThread();
 		client.setJob(job);
 		client.setHttpStatusListener(new HttpStatusListener() {
 
-			@Override
-			public void onSendRequestToAgent(JobStatus status) {
-				logger.info("[" + Thread.currentThread().getId() + "]"
-						+ job.getSeed().getSeedId() + " sent to agent("
-						+ job.getAgent().getIp() + ")- Job Id : "
-						+ job.getJobId());
-				try {
-					jobTable.update(job.getJobId(), status);
-				} catch (SharedJobTableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 
-			@Override
-			public void onGetResponseFromAgent(JobStatus status) {
+			public void onGetResponseFromAgent(JobRequestEvent event) {
 				logger.info("[" + Thread.currentThread().getId() + "]"
-						+ "Get response about " + job.getJobId()
+						+ "Get response about " + event.getJobId()
 						+ " from agent");
 				try {
-					jobTable.update(job.getJobId(), status);
+					jobTable.update(event.getJobId(), event.getJobStatus());
+				} catch (SharedJobTableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			@Override
+			public void onSendRequestToAgent(JobRequestEvent event) {
+				logger.info("[" + Thread.currentThread().getId() + "]"
+						+ event.getCurrentSeed() + " sent to agent("
+						+ event.getJobAgentIP() + ")- Job Id : "
+						+ event.getJobId());
+				try {
+					jobTable.update(job.getJobId(), event.getJobStatus());
 				} catch (SharedJobTableException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -157,13 +152,12 @@ public class JobManager implements Manager {
 			}
 
 			@Override
-			public void onRequestTimeout(JobStatus status) {
+			public void onRequestTimeout(JobRequestEvent event) {
 				logger.info("[" + Thread.currentThread().getId() + "]"
-						+ "Request Time Out : Job ID - " + job.getJobId());
+						+ "Request Time Out : Job ID - " + event.getJobId());
 				try {
-					jobTable.update(job.getJobId(), status);
+					jobTable.update(event.getJobId(), event.getJobStatus());
 				} catch (SharedJobTableException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -201,9 +195,21 @@ public class JobManager implements Manager {
 	@Override
 	public void update(String key, Map<String, String> fields) {
 		String jobId = key;
-
+		String resultCode = fields.get("StatusCode");
+		
 		try {
-			jobTable.update(jobId, JobStatus.DONE);
+			switch (resultCode) {
+			case "01":
+				jobTable.update(jobId, JobStatus.DONE);
+				break;
+			case "02":
+				jobTable.update(jobId, JobStatus.ERROR);
+				break;
+
+			default:
+				break;
+			}
+			
 		} catch (SharedJobTableException e) {
 			e.printStackTrace();
 		}

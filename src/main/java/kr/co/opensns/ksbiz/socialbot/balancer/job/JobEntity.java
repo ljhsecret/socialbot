@@ -1,6 +1,5 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.job;
 
-import kr.co.opensns.ksbiz.socialbot.balancer.BalancerObject;
 import kr.co.opensns.ksbiz.socialbot.balancer.agent.AgentInfo;
 import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
 
@@ -18,7 +17,7 @@ import kr.co.opensns.ksbiz.socialbot.balancer.seed.SeedEntity;
  *
  */
 
-public class JobEntity implements BalancerObject{
+public class JobEntity {
 	
 	private SeedEntity targetSeed;
 	private AgentInfo workingAgent;
@@ -30,10 +29,7 @@ public class JobEntity implements BalancerObject{
 	private int crawlType;
 	private String contentType;
 	
-	
 	JobStatus status;
-	
-	
 	
 	public JobEntity(){
 		this(null,null);
@@ -43,6 +39,10 @@ public class JobEntity implements BalancerObject{
 	
 	public void setStatus(JobStatus status){
 		this.status = status;
+	}
+	
+	public JobStatus getStatus(){
+		return status;
 	}
 	
 	public JobEntity(SeedEntity seed, AgentInfo agent){
@@ -94,9 +94,5 @@ public class JobEntity implements BalancerObject{
 		return paramMap;
 	}
 */
-	@Override
-	public void update(BalancerObject bo) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }
