@@ -18,6 +18,7 @@ import kr.co.opensns.ksbiz.socialbot.crawler.instagram.domain.Media;
 import kr.co.opensns.ksbiz.socialbot.crawler.instagram.domain.Medias;
 import kr.co.opensns.ksbiz.socialbot.internal.http.HttpClient;
 import kr.co.opensns.ksbiz.socialbot.internal.http.HttpClientSimple;
+import kr.co.opensns.ksbiz.socialbot.lang.FetchException;
 
 public class MediaFetcher extends ApiFetcher {
 	private AccessToken accessToken;
@@ -41,8 +42,8 @@ public class MediaFetcher extends ApiFetcher {
 	}
 
 	@Override
-	public Object fetch() {
-		return null;
+	public Object fetch() throws FetchException {
+		throw new FetchException();
 	}
 	
 	public Object fetchById(String id) {
@@ -62,12 +63,15 @@ public class MediaFetcher extends ApiFetcher {
 	}
 
 	@Override
-	public Object fetch(Object obj) {
+	public Object fetch(Object obj) throws FetchException {
 		System.out.println("Call fetch. jobId: " + obj.toString());
 		String id = (String)obj;
 		HttpClient httpClient = new HttpClientSimple();
 		String url = getUrlRecentMedia(id);
+		
 		String jsonStr = httpClient.getResponseString(url);
+		
+		if( jsonStr == null ) throw new FetchException();
 		
 		Gson gson = new GsonBuilder()
 	    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -85,7 +89,6 @@ public class MediaFetcher extends ApiFetcher {
 			Media media = iter.next();
 			if( media.getId() == null ) continue;
 			connectionFactory.insertSeedInfo(new SeedDO(media.getId(), SITE_ID, SEED_TYPE, CRL_TYPE, CHANNEL_ID, "", "", "", new Date(System.currentTimeMillis()), 0, new Date(System.currentTimeMillis()), "", "", "", ""));
-//			System.out.println("new media id" +  media.getId());
 		}
 	}
 }

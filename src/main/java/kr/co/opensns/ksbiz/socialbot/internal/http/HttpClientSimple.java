@@ -55,7 +55,7 @@ public class HttpClientSimple implements HttpClient {
 	}
 	
 	@Override
-	public String getResponseString(String url) {
+	public String getResponseString(String url)  {
 		BufferedReader br = null;
 		try {
 			br = getReader(url);

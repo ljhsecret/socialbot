@@ -6,6 +6,7 @@ import java.util.List;
 
 import kr.co.opensns.ksbiz.socialbot.agent.JobThreadCounter;
 import kr.co.opensns.ksbiz.socialbot.crawler.fetcher.Fetcher;
+import kr.co.opensns.ksbiz.socialbot.lang.FetchException;
 import kr.co.opensns.ksbiz.socialbot.schedule.Job;
 import kr.co.opensns.ksbiz.socialbot.util.Observable;
 import kr.co.opensns.ksbiz.socialbot.util.Observer;
@@ -36,7 +37,14 @@ public class Crawler implements Runnable, Observable{
 	public Object crawl() {
 		// TODO what is the crawl site and type
 		// do check job
-		return fetcher.fetch(job.getSeed());
+		Object fetchResult = null;
+		try {
+			fetchResult = fetcher.fetch(job.getSeed());
+		} catch ( FetchException e) {
+			e.printStackTrace();
+		}
+		
+		return fetchResult;
 	}
 	
 	public void write(Object object) {
@@ -74,7 +82,10 @@ public class Crawler implements Runnable, Observable{
 		setRun(true);
 		
 		Object result = crawl();
-		write(result);
+		
+		if( result != null) {
+			write(result);
+		}
 		
 		setRun(false);
 	}
