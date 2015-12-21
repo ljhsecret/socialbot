@@ -61,6 +61,7 @@ public class HttpClientSimple implements HttpClient {
 			br = getReader(url);
 		} catch (IOException e1) {
 			e1.printStackTrace();
+			return null;
 		}
 		String line = null;
 		StringBuffer buffer = new StringBuffer();
@@ -73,7 +74,7 @@ public class HttpClientSimple implements HttpClient {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 			logger.error("ERROR	Message:[" + buffer + "]");
-			return new String();
+			return null;
 		}
 		
 		return buffer.toString();

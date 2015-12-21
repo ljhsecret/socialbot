@@ -49,7 +49,12 @@ public class MediaFetcher extends ApiFetcher {
 	public Object fetchById(String id) {
 		HttpClient httpClient = new HttpClientSimple();
 		String url = getUrlRecentMedia(id);
-		String jsonStr = httpClient.getResponseString(url);
+		String jsonStr = null;
+		try {
+			jsonStr = httpClient.getResponseString(url);
+		} catch (FetchException e) {
+			e.printStackTrace();
+		}
 		
 		Gson gson = new GsonBuilder()
 	    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -68,11 +73,13 @@ public class MediaFetcher extends ApiFetcher {
 		String id = (String)obj;
 		HttpClient httpClient = new HttpClientSimple();
 		String url = getUrlRecentMedia(id);
-		
-		String jsonStr = httpClient.getResponseString(url);
-		
-		if( jsonStr == null ) 
+		String jsonStr = null;
+		try {
+			jsonStr = httpClient.getResponseString(url);
+		} catch ( Exception  e) {
 			throw new FetchException();
+		}
+		
 		
 		Gson gson = new GsonBuilder()
 	    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

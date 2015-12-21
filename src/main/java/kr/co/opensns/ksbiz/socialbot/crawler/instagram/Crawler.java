@@ -40,7 +40,7 @@ public class Crawler implements Runnable, Observable{
 		Object fetchResult = null;
 		try {
 			fetchResult = fetcher.fetch(job.getSeed());
-		} catch ( FetchException e) {
+		} catch ( FetchException  e) {
 			e.printStackTrace();
 		}
 		
