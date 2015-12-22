@@ -2,6 +2,8 @@ package kr.co.opensns.ksbiz.socialbot.balancer.seed;
 
 import java.util.HashMap;
 
+import kr.co.opensns.ksbiz.socialbot.balancer.config.SeedConfig;
+
 /**
  * repository별 Seed 데이터 로드를 처리하기 위한 추상클래스
  *
@@ -17,5 +19,5 @@ import java.util.HashMap;
  */
 
 public abstract class Loadable {
-	abstract SeedQueue Load(String path,HashMap<String, String> fields);
+	abstract SeedQueue Load(SeedConfig seedConf);
 }

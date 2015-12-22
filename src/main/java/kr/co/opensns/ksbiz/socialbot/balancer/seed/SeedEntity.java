@@ -20,15 +20,15 @@ import java.util.Map;
  */
 
 public class SeedEntity {
-	
+
 	private SeedDO seed;
-	
-	public SeedEntity(){
+
+	public SeedEntity() {
 		this(null);
 	}
 
 	public SeedEntity(SeedDO seed) {
-		if(seed==null)
+		if (seed == null)
 			seed = new SeedDO();
 		this.seed = seed;
 	}
@@ -44,10 +44,11 @@ public class SeedEntity {
 				seed.cursor = fields.get(fieldName);
 				break;
 			case "lastcrawldate":
-//				seed.lastCrawledDate = Long.parseLong(fields.get(fieldName));
+				// seed.lastCrawledDate = Long.parseLong(fields.get(fieldName));
 				break;
 			case "crawleddoccount":
-//				seed.crawledDocCount += Long.parseLong(fields.get(fieldName));
+				// seed.crawledDocCount +=
+				// Long.parseLong(fields.get(fieldName));
 				break;
 			default:
 				break;
@@ -57,16 +58,17 @@ public class SeedEntity {
 
 	private double getAvrUpdateTime() {
 		try {
-			return (seed.lastVisitDate.getTime()/1000L - seed.firstVisitDate.getTime()/1000L) / seed.docCnt;
+			return (seed.lastVisitDate.getTime() / 1000L - seed.firstVisitDate
+					.getTime() / 1000L) / seed.docCnt;
 		} catch (Exception e) {
 			return 0;
-		} 
+		}
 	}
 
 	public double getPriority() {
-		return 0;
+		return getAvrUpdateTime();
 	}
-	
+
 	@Override
 	public String toString() {
 		return super.toString();
@@ -103,7 +105,7 @@ public class SeedEntity {
 	public void setDocCount(int crawledDocCount) {
 		this.seed.setDocCnt(crawledDocCount);
 	}
-	
+
 	public String getSeedId() {
 		return this.seed.getSeedId();
 	}
@@ -122,5 +124,25 @@ public class SeedEntity {
 
 	public int getCrawlType() {
 		return this.seed.getCrlType();
+	}
+
+	public void setCrlType(String crlType) {
+		int code;
+		switch (crlType) {
+		case "media":
+			code = 01;
+			break;
+		case "comments":
+			code = 02;
+			break;
+		case "likes":
+			code = 03;
+			break;
+
+		default:
+			code = -1;
+			break;
+		}
+		this.seed.setCrlType(code);
 	}
 }

@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.HashMap;
 
+import kr.co.opensns.ksbiz.socialbot.balancer.config.SeedConfig;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -34,8 +36,9 @@ public class FileSeedLoader extends Loadable{
 	}
 
 	@Override
-	SeedQueue Load(String path, HashMap<String, String> fields) {
-		SeedQueue q = new SeedQueue(00);
+	SeedQueue Load(SeedConfig seedConf) {
+		SeedQueue q = new SeedQueue(seedConf.getCrlType());
+		String path = seedConf.getRepositoryPath();
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(path))));
 			logger.info("Reading Seed file : "+path);

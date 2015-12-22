@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import kr.co.opensns.ksbiz.socialbot.balancer.config.SeedConfig;
 import kr.co.opensns.ksbiz.socialbot.balancer.db.mybatis.ConnectionFactory;
 
 public class DBSeedLoader extends Loadable {
@@ -16,6 +17,7 @@ public class DBSeedLoader extends Loadable {
 		cf = new ConnectionFactory();
 	}
 
+	@Deprecated
 	private SeedEntity MapToSeedEntity(Map<String, Object> map) {
 		SeedEntity seed = new SeedEntity();
 
@@ -56,14 +58,19 @@ public class DBSeedLoader extends Loadable {
 	}
 
 	@Override
-	SeedQueue Load(String path, HashMap<String, String> fields) {
-		SeedQueue queue = new SeedQueue(01);
+	SeedQueue Load(SeedConfig seedConf) {
+		SeedQueue queue = new SeedQueue(seedConf.getCrlType());
 
 /*		List<Map<String, Object>> results = cf.selectSeedInfo();
 		// System.out.println(results);
 		for (Map<String, Object> result : results) {
 			queue.put(MapToSeedEntity(result));
 		}*/
+		
+		HashMap<String,String> fields = new HashMap<String,String>();
+		
+		fields.put("siteId", seedConf.getSite());
+		fields.put("seedType", seedConf.getSeedType());
 		
 		List<SeedDO> results = cf.selectSeedInfo(fields);
 

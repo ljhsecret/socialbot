@@ -158,7 +158,7 @@ public class SeedManager implements Manager {
 				fields.put("type", seedType);
 				fields.put("siteId", site);
 				
-				q = loader.LoadSeedQueue(path, fields);
+				q = loader.LoadSeedQueue(seedConf);
 				queueMap.put(key, q);
 				logger.info("SeedQueue Load done : " + key);
 			} catch (InstantiationException | IllegalAccessException
@@ -192,7 +192,7 @@ public class SeedManager implements Manager {
 		sb.append("\"data\":[");
 		for(Iterator iter = queueMap.keySet().iterator();iter.hasNext();){
 			SeedQueue queue = (SeedQueue) queueMap.get(iter.next());
-			sb.append("{\"seedtype\":\""+queue.getType()+"\",");
+			sb.append("{\"seed_type\":\""+queue.getType()+"\",");
 			sb.append("\"queue_size\":"+queue.getQueueSize()+",");
 			sb.append("\"buffer_size\":"+queue.getBufSize()+"}");
 			if(iter.hasNext())

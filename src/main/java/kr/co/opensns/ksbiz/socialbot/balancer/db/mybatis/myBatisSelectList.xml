@@ -28,7 +28,7 @@
 	<select id="selectSeedInfo" parameterType="hMap" resultMap="resultMap">
 		SELECT *
 		FROM seed_info
-		WHERE SEED_TYPE=#{type}
+		WHERE SEED_TYPE=#{seedType}
 		AND SITE_ID=#{siteId}
 	</select>
 	<!-- <select id="selectSeedInfo" resultType="hMap" parameterType="int"> 
