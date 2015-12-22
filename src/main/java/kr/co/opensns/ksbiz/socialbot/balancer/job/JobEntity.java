@@ -23,11 +23,6 @@ public class JobEntity {
 	private AgentInfo workingAgent;
 	
 	private long jobId;
-	private int siteId;
-	private String seedId;
-	private String cursor;
-	private int crawlType;
-	private String contentType;
 	
 	JobStatus status;
 	
@@ -59,10 +54,6 @@ public class JobEntity {
 	
 	public void setSeed(SeedEntity seed){
 		this.targetSeed = seed;
-		this.siteId = seed.getSiteId();
-		this.seedId = seed.getSeedId();
-		this.cursor = seed.getCursor();
-		this.crawlType = seed.getCrawlType();
 	}
 	
 	public void setAgent(AgentInfo agent){
@@ -76,23 +67,5 @@ public class JobEntity {
 	public AgentInfo getAgent(){
 		return this.workingAgent;
 	}
-	/*
-	public HashMap<String, String> toMap(){
-		HashMap<String, String> paramMap = new HashMap<String, String>();
-		
-		paramMap.put("jobId", ""+jobId);
-		paramMap.put("channelId", "10");
-		paramMap.put("siteId", "1010");
-		paramMap.put("seed", seed);
-		//코드화
-		paramMap.put("cursor", "");
-		//config
-		paramMap.put("crawlType", "");
-		paramMap.put("contentType", "JSON");
-		paramMap.put("return", "");
-		
-		return paramMap;
-	}
-*/
 	
 }

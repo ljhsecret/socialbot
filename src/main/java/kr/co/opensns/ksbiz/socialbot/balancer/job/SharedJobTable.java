@@ -1,7 +1,6 @@
 package kr.co.opensns.ksbiz.socialbot.balancer.job;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -9,17 +8,15 @@ import org.apache.log4j.Logger;
 import kr.co.opensns.ksbiz.socialbot.balancer.exception.SharedJobTableException;
 
 public class SharedJobTable {
-	private static final short JOB_TABLE_SIZE_MAX = 20;
+	private static final short JOB_TABLE_SIZE_MAX = 100;
 
-	private static HashMap<String, JobEntity> SharedJobTable;
+	private static HashMap<String, JobEntity> jobTable;
 	private static SharedJobTable instance;
-
-	private JobStatusListener listener;
 
 	private Logger logger;
 
 	private SharedJobTable() {
-		this.SharedJobTable = new HashMap<String, JobEntity>();
+		SharedJobTable.jobTable = new HashMap<String, JobEntity>();
 		logger = Logger.getLogger(SharedJobTable.class);
 	}
 
@@ -32,13 +29,9 @@ public class SharedJobTable {
 		return instance;
 	}
 
-	public void setJobStatusListener(JobStatusListener listener) {
-		this.listener = listener;
-	}
-
 	public int checkRequireJob() {
 		synchronized (SharedJobTable.class) {
-			int curSize = SharedJobTable.size();
+			int curSize = jobTable.size();
 			return JOB_TABLE_SIZE_MAX - curSize;
 		}
 	}
@@ -46,25 +39,25 @@ public class SharedJobTable {
 	public void update(String jobId, JobStatus status)
 			throws SharedJobTableException {
 		synchronized (SharedJobTable.class) {
-			if (SharedJobTable == null)
+			if (jobTable == null)
 				throw new NullPointerException();
-			if (SharedJobTable.containsKey(jobId)) {
+			if (jobTable.containsKey(jobId)) {
 
 				if (status == JobStatus.DONE) {
-					SharedJobTable.remove(jobId);
+					jobTable.remove(jobId);
 					logger.info("Job was done : Job ID - " + jobId);
 
 					return;
 				}
 
 				if (status == JobStatus.ERROR) {
-					SharedJobTable.remove(jobId);
+					jobTable.remove(jobId);
 					logger.info("An error has occurred on the job : Job ID - "
 					 +jobId);
 					return;
 				}
 
-				SharedJobTable.get(jobId).setStatus(status);
+				jobTable.get(jobId).setStatus(status);
 
 			} else {
 				throw new SharedJobTableException(
@@ -75,38 +68,38 @@ public class SharedJobTable {
 
 	public JobEntity get(String jobId) throws SharedJobTableException {
 		synchronized (SharedJobTable.class) {
-			if (!SharedJobTable.containsKey(jobId)) {
+			if (!jobTable.containsKey(jobId)) {
 				throw new SharedJobTableException("this job(" + jobId
 						+ ") is not exist in JobTable");
 			} else {
-				return SharedJobTable.get(jobId);
+				return jobTable.get(jobId);
 			}
 		}
 	}
 
 	public void put(String jobId, JobEntity job) throws SharedJobTableException {
 		synchronized (SharedJobTable.class) {
-			if (SharedJobTable == null)
+			if (jobTable == null)
 				throw new NullPointerException();
-			if (SharedJobTable.containsKey(jobId)) {
+			if (jobTable.containsKey(jobId)) {
 				throw new SharedJobTableException(
 						"Duplicate JobTable key : key - " + jobId);
 			}
-			SharedJobTable.put(jobId, job);
+			jobTable.put(jobId, job);
 			return;
 		}
 	}
 
 	public Set<String> JobIdSet(){
-		return SharedJobTable.keySet();
+		return jobTable.keySet();
 	}
 	
 	public int getSize(){
-		return SharedJobTable.size();
+		return jobTable.size();
 	}
 	
 	public int getMaxSize(){
-		return this.JOB_TABLE_SIZE_MAX;
+		return SharedJobTable.JOB_TABLE_SIZE_MAX;
 	}
 	
 }

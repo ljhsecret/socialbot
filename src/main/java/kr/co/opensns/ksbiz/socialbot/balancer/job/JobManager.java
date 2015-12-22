@@ -71,24 +71,6 @@ public class JobManager implements Manager {
 		logger = Logger.getLogger(this.getClass());
 
 		jobTable = SharedJobTable.getInstance();
-		jobTable.setJobStatusListener(new JobStatusListener() {
-
-			@Override
-			public void onRequireJob() {
-
-			}
-
-			@Override
-			public void onOccurErrorJob(JobEntity job) {
-				AgentInfo agent = job.getAgent();
-				SeedEntity seed = job.getSeed();
-			}
-
-			@Override
-			public void onCompleteJob(JobEntity job) {
-				
-			}
-		});
 	}
 
 	public int checkRequireJob() {

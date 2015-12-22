@@ -15,7 +15,7 @@ public class JobRequestEvent {
 	}
 	
 	public String getCurrentSeed() {
-		return null;
+		return job.getSeed().getSeedId();
 	}
 	
 	public String getJobAgentIP(){

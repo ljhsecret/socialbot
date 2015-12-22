@@ -22,8 +22,7 @@
 			<contents-type>json</contents-type>
 		</seed>
 		
-		<!-- 
- 		<seed>
+<!--  		<seed>
  			<channel>sns</channel>
 			<site>twitter</site>
 			<repository>
@@ -31,11 +30,10 @@
 				<path>config/Seeds.csv</path>
 			</repository>
 			<weight>2</weight>
-			<type>id</type>
+			<type>docid</type>
 			<crawl-type>media</crawl-type>
 			<contents-type>json</contents-type>
-		</seed>
-		 --> 
+		</seed> -->
 	</seed-info>
 
 	<agent-info>

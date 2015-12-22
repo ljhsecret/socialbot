@@ -33,7 +33,7 @@ public class Balancer implements Runnable {
 	SeedManager seedManager;
 	AgentManager agentManager;
 
-	Logger logger;
+	static Logger logger;
 
 	public Balancer(BalancerConfig conf) {
 		jobManager = JobManager.getInstance();
@@ -75,13 +75,13 @@ public class Balancer implements Runnable {
 		// Start Server ...
 		// --------------------------------------------------------------
 		new HttpPooledServer(8808).start();
-		System.out.println("Server Started ...");
+		logger.info("Server Started ...");
 		
 		// --------------------------------------------------------------
 		// Start balancer ...
 		// --------------------------------------------------------------
 		balancer.start();
-		System.out.println("Balancer Started ...");
+		logger.info("Balancer Started ...");
 
 	}
 }
